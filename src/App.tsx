@@ -197,8 +197,11 @@ function App() {
           justifyContent: 'space-between', 
           alignItems: 'center',
       }}>
-        <h1 style={{ fontSize: '1.5em', margin: 0 }}>{t(lang, 'app.title')}</h1>
-        <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+        <h1 style={{ fontSize: '2.2em', margin: 0 }}>
+            <img src="logo.svg" alt="Logo" style={{ width: '30px', height: '30px', marginRight: '10px' }} />
+            PGN Typist
+        </h1>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '16x', alignItems: 'center' }}>
             <label style={{ fontSize: '0.9em' }}>{t(lang, 'settings.language')}: </label>
             <select 
                 value={lang} 

@@ -1,0 +1,19 @@
+{
+  "name": "Fast PGN Typist",
+  "short_name": "PGN Typist",
+  "description": "Quickly transcribe chess games into PGN format",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#1a1a1a",
+  "theme_color": "#1a1a1a",
+  "orientation": "any",
+  "icons": [
+    {
+      "src": "./logo.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}
