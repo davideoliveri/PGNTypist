@@ -1,0 +1,57 @@
+.app-main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin-top: 20px;
+}
+
+/* Desktop: Side-by-side grid with bigger board */
+.content-grid {
+    display: grid;
+    grid-template-columns: 1fr 400px; /* Bigger board column */
+    gap: 20px;
+    align-items: start;
+}
+
+.moves-column {
+    display: flex;
+    flex-direction: column;
+    height: 400px; /* Match bigger board */
+    min-height: 400px;
+    overflow: hidden;
+}
+
+.board-column {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+/* Mobile Responsive */
+@media (max-width: 640px) {
+    .content-grid {
+        grid-template-columns: 1fr;
+        flex: 1; /* Take available space */
+    }
+    
+    .moves-column {
+        height: 100%;
+        min-height: 150px;
+        max-height: none;
+        flex: 1;
+    }
+    
+    /* Metadata compact layout on mobile */
+    .metadata-row {
+        flex-wrap: nowrap;
+    }
+    .metadata-key {
+        flex: 0 0 60px !important;
+        width: 60px !important;
+    }
+    .metadata-value {
+        flex: 1 1 auto !important;
+        min-width: 100px !important;
+    }
+}
