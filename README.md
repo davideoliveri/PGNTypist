@@ -56,10 +56,20 @@ npm run build
 
 ## Supported Languages
 
-- 🇬🇧 English (K, Q, R, B, N)
-- 🇪🇸 Spanish (R, D, T, A, C)
-
-*More languages can be added easily!*
+| Language | Piece Notation |
+|----------|----------------|
+| English | K, Q, R, B, N |
+| Spanish | R, D, T, A, C |
+| Italian | R, D, T, A, C |
+| French | R, D, T, F, C |
+| Portuguese | R, D, T, B, C |
+| Greek | Ρ, Β, Π, Α, Ι |
+| Russian | Кр, Ф, Л, С, К |
+| Dutch | K, D, T, L, P |
+| Norwegian | K, D, T, L, S |
+| Swedish | K, D, T, L, S |
+| Finnish | K, D, T, L, R |
+| Catalan | R, D, T, A, C |
 
 ## License
 
