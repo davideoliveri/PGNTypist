@@ -32,11 +32,11 @@ function App() {
   }, [lang]);
 
   const [headers, setHeaders] = useState<{ [key: string]: string }>({
-    'Event': 'Fast PGN Typist Game',
+    'Event': '??',
     'Date': new Date().toISOString().split('T')[0].replace(/-/g, '.'),
-    'Site': '?',
-    'White': '?',
-    'Black': '?',
+    'Site': '??',
+    'White': '??',
+    'Black': '??',
     'Result': '*'
   });
   const [notification, setNotification] = useState<string | null>(null);
