@@ -1,73 +1,70 @@
-# React + TypeScript + Vite
+# ♞ PGN Typist
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A fast, keyboard-first web app for transcribing chess games into PGN (Portable Game Notation) format.
 
-Currently, two official plugins are available:
+**[→ Try it live](https://davideoliveri.github.io/PGNTypist/)**
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+![PGN Typist Screenshot](public/logo.svg)
 
-## React Compiler
+## Features
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- 🎯 **Keyboard-first** - Type moves quickly with autocomplete suggestions
+- 🌍 **Localized notation** - Type in your language (Spanish: `Cf3`, English: `Nf3`)
+- ♟️ **Real-time validation** - Only legal moves are accepted
+- 📋 **One-click export** - Copy PGN to clipboard or download as file
+- 📱 **Mobile-friendly** - Works great on phones and tablets
+- 🔒 **Offline support** - Install as a PWA to use without internet
+- 🎨 **Clean dark theme** - Easy on the eyes during long transcription sessions
 
-## Expanding the ESLint configuration
+## Quick Start
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+1. Visit the [live demo](https://davideoliveri.github.io/PGNTypist/)
+2. Start typing chess moves (e.g., `e4`, `Nf3`, `O-O`)
+3. Use arrow keys to navigate between moves
+4. Click "Copy PGN" when done
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## Tech Stack
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+- **React 19** + TypeScript
+- **chess.js** for move validation
+- **react-chessboard** for board visualization
+- **Vite** with single-file build (entire app is one HTML file!)
+- **PWA** with service worker for offline use
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## Development
+
+```bash
+# Install dependencies
+npm install
+
+# Start dev server
+npm run dev
+
+# Build for production
+npm run build
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Keyboard Shortcuts
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+| Key | Action |
+|-----|--------|
+| `Enter` | Submit move |
+| `↑` / `↓` | Navigate suggestions |
+| `←` / `→` | Navigate move history |
+| `Cmd/Ctrl + Z` | Undo |
+| `Cmd/Ctrl + Shift + Z` | Redo |
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+## Supported Languages
+
+- 🇬🇧 English (K, Q, R, B, N)
+- 🇪🇸 Spanish (R, D, T, A, C)
+
+*More languages can be added easily!*
+
+## License
+
+MIT License - feel free to use, modify, and distribute.
+
+---
+
+Made with ❤️ for chess enthusiasts who prefer typing over clicking.
