@@ -8,7 +8,29 @@ import { MiniBoard } from './components/MiniBoard';
 import './App.css';
 
 function App() {
-  const [lang, setLang] = useState<Language>('en');
+  // Detect language: localStorage > browser > fallback to 'en'
+  const getInitialLanguage = (): Language => {
+    // Check localStorage first
+    const stored = localStorage.getItem('pgn-typist-lang');
+    if (stored && stored in SUPPORTED_LANGUAGES) {
+      return stored as Language;
+    }
+    // Detect from browser
+    const browserLang = navigator.language.split('-')[0] as Language;
+    if (browserLang in SUPPORTED_LANGUAGES) {
+      return browserLang;
+    }
+    // Fallback to English
+    return 'en';
+  };
+
+  const [lang, setLang] = useState<Language>(getInitialLanguage);
+
+  // Persist language preference
+  useEffect(() => {
+    localStorage.setItem('pgn-typist-lang', lang);
+  }, [lang]);
+
   const [headers, setHeaders] = useState<{ [key: string]: string }>({
     'Event': 'Fast PGN Typist Game',
     'Date': new Date().toISOString().split('T')[0],

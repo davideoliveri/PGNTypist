@@ -1,12 +1,17 @@
 // Service Worker for Fast PGN Typist
 const CACHE_NAME = 'pgn-typist-v1';
+const ASSETS_TO_CACHE = [
+  './',
+  './index.html',
+  './logo.svg',
+  './manifest.json'
+];
 
-// Install: Cache the main page
+// Install: Cache essential assets
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
-      // Cache the main HTML file (which includes all JS/CSS inlined)
-      return cache.addAll(['./', './index.html']);
+      return cache.addAll(ASSETS_TO_CACHE);
     })
   );
   // Activate immediately
