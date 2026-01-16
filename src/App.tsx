@@ -33,7 +33,7 @@ function App() {
 
   const [headers, setHeaders] = useState<{ [key: string]: string }>({
     'Event': 'Fast PGN Typist Game',
-    'Date': new Date().toISOString().split('T')[0],
+    'Date': new Date().toISOString().split('T')[0].replace(/-/g, '.'),
     'Site': '?',
     'White': '?',
     'Black': '?',
