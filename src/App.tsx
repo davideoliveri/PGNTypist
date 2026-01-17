@@ -278,11 +278,6 @@ function App() {
             </header>
 
             <main className="app-main">
-                {/* Top Area: Metadata */}
-                <div style={{ marginBottom: '10px' }}>
-                    <MetadataEditor headers={headers} onChange={setHeaders} />
-                </div>
-
                 {/* Content Area: Grid */}
                 <div className="content-grid">
                     <div className="moves-column">
@@ -378,6 +373,9 @@ function App() {
             </main>
 
             <footer style={{ marginTop: 'auto', display: 'flex', flexDirection: 'column', gap: '15px', paddingBottom: '20px' }}>
+                <div style={{ marginBottom: '10px' }}>
+                    <MetadataEditor headers={headers} onChange={setHeaders} />
+                </div>
                 <div style={{ display: 'flex', gap: '10px', justifyContent: 'center' }}>
                     <button onClick={() => handleExport('copy')}>
                         {t(lang, 'export.copy')}
