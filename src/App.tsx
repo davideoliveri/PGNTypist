@@ -305,7 +305,7 @@ function App() {
                                     borderRadius: '4px',
                                     color: moveList.length === 0 ? '#444' : '#888',
                                     cursor: moveList.length === 0 ? 'default' : 'pointer',
-                                    fontSize: '0.8em',
+                                    fontSize: '1em',
                                     opacity: moveList.length === 0 ? 0.5 : 1
                                 }}
                             >
@@ -321,7 +321,7 @@ function App() {
                                     borderRadius: '4px',
                                     color: moveList.length === 0 ? '#533' : '#a66',
                                     cursor: moveList.length === 0 ? 'default' : 'pointer',
-                                    fontSize: '0.8em',
+                                    fontSize: '1em',
                                     opacity: moveList.length === 0 ? 0.5 : 1
                                 }}
                             >
@@ -343,7 +343,7 @@ function App() {
                                     borderRadius: '4px',
                                     color: '#888',
                                     cursor: 'pointer',
-                                    fontSize: '0.85em',
+                                    fontSize: '1em',
                                     display: 'block',
                                     marginLeft: 'auto',
                                     marginRight: 'auto'
@@ -438,7 +438,7 @@ function App() {
                             href={`https://lichess.org/analysis/pgn/${encodeURIComponent(moveList.reduce((acc, move, i) => {
                                 if (i % 2 === 0) acc += `${Math.floor(i / 2) + 1}.`;
                                 return acc + move + ' ';
-                            }, '').trim())}`}
+                            }, '').trim())}?color=${boardOrientation}`}
                             target="_blank"
                             rel="noopener noreferrer"
                             style={{
