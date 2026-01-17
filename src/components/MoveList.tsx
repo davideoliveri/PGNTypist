@@ -95,14 +95,12 @@ export const MoveList: React.FC<MoveListProps> = ({ moves, selectedIndex, onSele
           display: 'flex',
           flexDirection: 'column',
           gap: '4px',
-          flex: 1,
-          overflowY: 'auto',
           padding: '10px',
           border: '1px solid #444',
           borderRadius: '4px',
           background: '#1e1e1e',
           fontFamily: 'monospace',
-          fontSize: '1em',
+          fontSize: '1.3em',
           outline: 'none' // Handled by focus styles
         }}
       >

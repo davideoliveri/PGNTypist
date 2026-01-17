@@ -236,9 +236,9 @@ function App() {
                 justifyContent: 'space-between',
                 alignItems: 'center',
             }}>
-                <h1 style={{ fontSize: '2.2em', margin: 0 }}>
+                <h1 className="title-logo" style={{ margin: 0 }}>
                     <img src="logo.svg" alt="Logo" style={{ width: '30px', height: '30px', marginRight: '10px' }} />
-                    PGN Typist
+                    <span>PGN Typist</span>
                 </h1>
                 <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
                     <button
@@ -453,6 +453,11 @@ function App() {
                         </a>
                     </div>
                 )}
+                <div style={{ textAlign: 'center' }}>
+                    <p style={{ fontSize: '0.8em', color: '#888' }}>
+                        {t(lang, 'footer.credit')} <a href="https://github.com/davideoliveri" target="_blank" rel="noopener noreferrer" style={{ color: '#4a90e2', textDecoration: 'none' }}>Davide Oliveri</a>
+                    </p>
+                </div>
             </footer>
 
             {/* Toast Notification */}
