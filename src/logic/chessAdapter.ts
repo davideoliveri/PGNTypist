@@ -50,21 +50,21 @@ export function useChessGame() {
   }, [redoStack, moves]);
 
   // Derived state: Replay the game
-    // Let's compute the FULL game state first.
-    // let validMoves: string[] = [];
-    
-    // for (const san of moves) {
-    //   try {
-    //     chess.move(san);
-    //     validMoves.push(san);
-    //   } catch (e) {
-    //     // Should not happen if we validate on input, but if editing causes downstream illegality, we truncate.
-    //     // The truncate logic handles this in 'editMove', so here we just assume validity or stop.
-    //     break;
-    //   }
-    // }
-    
-    // return { chess, validMoves };
+  // Let's compute the FULL game state first.
+  // let validMoves: string[] = [];
+
+  // for (const san of moves) {
+  //   try {
+  //     chess.move(san);
+  //     validMoves.push(san);
+  //   } catch (e) {
+  //     // Should not happen if we validate on input, but if editing causes downstream illegality, we truncate.
+  //     // The truncate logic handles this in 'editMove', so here we just assume validity or stop.
+  //     break;
+  //   }
+  // }
+
+  // return { chess, validMoves };
 
   // Compute state at the cursor (for display and validation of new input)
   // If selectedIndex is null, cursor is at end.
@@ -72,11 +72,11 @@ export function useChessGame() {
   const cursorGame = useMemo(() => {
     const chess = new Chess();
     const limit = selectedIndex === null ? moves.length : selectedIndex;
-    
+
     for (let i = 0; i < limit; i++) {
-        try {
-            chess.move(moves[i]);
-        } catch(e) { break; }
+      try {
+        chess.move(moves[i]);
+      } catch (e) { break; }
     }
     return chess;
   }, [moves, selectedIndex]);
@@ -84,60 +84,60 @@ export function useChessGame() {
   const addMove = useCallback((san: string) => {
     // 1. Validate against cursorGame
     try {
-        // clone to test
-        const temp = new Chess(cursorGame.fen());
-        temp.move(san); 
-        // valid
+      // clone to test
+      const temp = new Chess(cursorGame.fen());
+      temp.move(san);
+      // valid
     } catch (e) {
-        return false;
+      return false;
     }
 
     if (selectedIndex === null) {
-        // Append
-        pushHistory([...moves, san]);
+      // Append
+      pushHistory([...moves, san]);
     } else {
-        // Edit/Insert at index
-        // We replace the move at selectedIndex
-        // Then we try to replay subsequent moves from 'moves' list.
-        const newMoves = moves.slice(0, selectedIndex);
-        newMoves.push(san);
-        
-        // Replay rest
-        const tempGame = new Chess(cursorGame.fen());
-        tempGame.move(san);
-        
-        for (let i = selectedIndex + 1; i < moves.length; i++) {
-            try {
-                tempGame.move(moves[i]);
-                newMoves.push(moves[i]);
-            } catch (e) {
-                // Future move is now invalid -> Truncate rest
-                break;
-            }
+      // Edit/Insert at index
+      // We replace the move at selectedIndex
+      // Then we try to replay subsequent moves from 'moves' list.
+      const newMoves = moves.slice(0, selectedIndex);
+      newMoves.push(san);
+
+      // Replay rest
+      const tempGame = new Chess(cursorGame.fen());
+      tempGame.move(san);
+
+      for (let i = selectedIndex + 1; i < moves.length; i++) {
+        try {
+          tempGame.move(moves[i]);
+          newMoves.push(moves[i]);
+        } catch (e) {
+          // Future move is now invalid -> Truncate rest
+          break;
         }
-        
-        pushHistory(newMoves);
-        // Advance cursor to next move (or end) behavior?
-        // PDR: "Input focus stays in input field for next move"
-        // If editing, maybe we just complete the edit and go to next ply?
-        // For now, let's reset selection to null (append mode) or advance?
-        // PDR doesn't explicitly say "remain in edit mode for subsequent moves".
-        // Usually if you fix a move, you might want to continue entering from there.
-        // Let's set selection to next index if it exists, or null if we are at end.
-        if (selectedIndex + 1 < newMoves.length) {
-            setSelectedIndex(selectedIndex + 1);
-        } else {
-            setSelectedIndex(null);
-        }
+      }
+
+      pushHistory(newMoves);
+      // Advance cursor to next move (or end) behavior?
+      // PDR: "Input focus stays in input field for next move"
+      // If editing, maybe we just complete the edit and go to next ply?
+      // For now, let's reset selection to null (append mode) or advance?
+      // PDR doesn't explicitly say "remain in edit mode for subsequent moves".
+      // Usually if you fix a move, you might want to continue entering from there.
+      // Let's set selection to next index if it exists, or null if we are at end.
+      if (selectedIndex + 1 < newMoves.length) {
+        setSelectedIndex(selectedIndex + 1);
+      } else {
+        setSelectedIndex(null);
+      }
     }
     return true;
   }, [cursorGame, moves, selectedIndex]);
 
   const setCursor = (indexOrFn: number | null | ((prev: number | null) => number | null)) => {
     if (typeof indexOrFn === 'function') {
-        setSelectedIndex(prev => indexOrFn(prev));
+      setSelectedIndex(prev => indexOrFn(prev));
     } else {
-        setSelectedIndex(indexOrFn);
+      setSelectedIndex(indexOrFn);
     }
   };
 
@@ -146,8 +146,28 @@ export function useChessGame() {
     // Localize
     return moves.map(m => toLocalizedSAN(m, lang));
   };
-  
 
+
+
+  const truncateFromIndex = useCallback((index: number) => {
+    if (index < 0 || index >= moves.length) return;
+    const newMoves = moves.slice(0, index);
+    pushHistory(newMoves);
+    setSelectedIndex(null);
+  }, [moves]);
+
+  const deleteLast = useCallback(() => {
+    if (moves.length === 0) return;
+    const newMoves = moves.slice(0, -1);
+    pushHistory(newMoves);
+    setSelectedIndex(null);
+  }, [moves]);
+
+  const clearAll = useCallback(() => {
+    if (moves.length === 0) return;
+    pushHistory([]);
+    setSelectedIndex(null);
+  }, [moves]);
 
   return {
     fen: cursorGame.fen(),
@@ -155,6 +175,9 @@ export function useChessGame() {
     selectedIndex,
     setCursor,
     addMove,
+    truncateFromIndex,
+    deleteLast,
+    clearAll,
     undo,
     redo,
     canUndo: historyStack.length > 0,

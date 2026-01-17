@@ -52,7 +52,6 @@ const REVERSE_PIECE_MAP: { [lang in Language]: { [char: string]: string } } = {
 export const UI_TRANSLATIONS: { [lang in Language]: { [key: string]: string } } = {
   en: {
     'app.placeholder': 'Enter move (e.g. e4, Nf3)',
-    'settings.language': 'Language',
     'export.copy': 'Copy PGN',
     'export.download': 'Download PGN',
     'export.copied': 'Copied!',
@@ -65,10 +64,52 @@ export const UI_TRANSLATIONS: { [lang in Language]: { [key: string]: string } } 
     'error.invalidMove': 'Invalid move',
     'game.white': 'White',
     'game.black': 'Black',
+    'help.title': 'How to Use',
+    'help.close': 'Close',
+    'help.instructions': `**Entering Moves**
+Type moves in algebraic notation: e4, Nf3, O-O (castling), exd5 (captures).
+Use your language's piece letters (K, Q, R, B, N for English).
+
+**Navigation**
+← → Arrow keys to browse moves
+Click any move to select it
+
+**Editing**
+Type a new move to replace the selected one
+Cmd/Ctrl + Z to undo, Cmd/Ctrl + Shift + Z to redo
+
+**Deleting Moves**
+Right-click (or long-press on mobile) on a move to delete it and all following moves
+
+**Exporting**
+Copy PGN or download as .pgn file
+Analyze on Lichess with one click`,
+    'context.deleteFromHere': 'Delete from here',
+    'board.flip': 'Flip Board',
+    'help.restartTutorial': 'Restart Tutorial',
+    'walkthrough.skip': 'Skip',
+    'walkthrough.next': 'Next',
+    'walkthrough.back': 'Back',
+    'walkthrough.finish': 'Get Started',
+    'walkthrough.welcome.title': 'Welcome to PGN Typist!',
+    'walkthrough.welcome.description': 'Let\'s take a quick tour to show you how to transcribe chess games quickly.',
+    'walkthrough.enterMoves.title': 'Enter Moves',
+    'walkthrough.enterMoves.description': 'Type chess moves here (e.g. e4, Nf3). Suggestions appear as you type. Press Enter to submit.',
+    'walkthrough.navigation.title': 'Navigate Moves',
+    'walkthrough.navigation.description': 'Click any move to select it, or use ← → arrow keys to browse through the game.',
+    'walkthrough.editing.title': 'Edit Moves',
+    'walkthrough.editing.description': 'Select a move and type a new one to replace it. Use Cmd/Ctrl+Z to undo.',
+    'walkthrough.deleteMenu.title': 'Delete Moves',
+    'walkthrough.deleteMenu.description': 'Right-click (or long-press on mobile) on any move to delete it and all following moves.',
+    'walkthrough.export.title': 'Export Your Game',
+    'walkthrough.export.description': 'Copy PGN to clipboard, download as a file, or analyze directly on Lichess.',
+    'walkthrough.done.title': 'You\'re Ready!',
+    'walkthrough.done.description': 'Start typing your first move. Click the ? button anytime for help.',
+    'moves.deleteLast': 'Delete Last',
+    'moves.clearAll': 'Clear All',
   },
   es: {
     'app.placeholder': 'Escribe jugada (ej. e4, Cf3)',
-    'settings.language': 'Idioma',
     'export.copy': 'Copiar PGN',
     'export.download': 'Descargar PGN',
     'export.copied': '¡Copiado!',
@@ -81,10 +122,52 @@ export const UI_TRANSLATIONS: { [lang in Language]: { [key: string]: string } } 
     'error.invalidMove': 'Jugada inválida',
     'game.white': 'Blancas',
     'game.black': 'Negras',
+    'help.title': 'Cómo Usar',
+    'help.close': 'Cerrar',
+    'help.instructions': `**Introducir Jugadas**
+Escribe jugadas en notación algebraica: e4, Cf3, O-O (enroque), exd5 (capturas).
+Usa las letras de piezas de tu idioma (R, D, T, A, C para español).
+
+**Navegación**
+← → Teclas de flecha para navegar
+Haz clic en cualquier jugada para seleccionarla
+
+**Edición**
+Escribe una nueva jugada para reemplazar la seleccionada
+Cmd/Ctrl + Z para deshacer, Cmd/Ctrl + Shift + Z para rehacer
+
+**Eliminar Jugadas**
+Clic derecho (o mantener pulsado en móvil) en una jugada para eliminarla y todas las siguientes
+
+**Exportar**
+Copia el PGN o descárgalo como archivo .pgn
+Analiza en Lichess con un clic`,
+    'context.deleteFromHere': 'Eliminar desde aquí',
+    'board.flip': 'Voltear Tablero',
+    'help.restartTutorial': 'Reiniciar Tutorial',
+    'walkthrough.skip': 'Omitir',
+    'walkthrough.next': 'Siguiente',
+    'walkthrough.back': 'Atrás',
+    'walkthrough.finish': 'Empezar',
+    'walkthrough.welcome.title': '¡Bienvenido a PGN Typist!',
+    'walkthrough.welcome.description': 'Hagamos un recorrido rápido para mostrarte cómo transcribir partidas de ajedrez.',
+    'walkthrough.enterMoves.title': 'Introducir Jugadas',
+    'walkthrough.enterMoves.description': 'Escribe jugadas aquí (ej. e4, Cf3). Las sugerencias aparecen mientras escribes.',
+    'walkthrough.navigation.title': 'Navegar Jugadas',
+    'walkthrough.navigation.description': 'Haz clic en cualquier jugada para seleccionarla, o usa las teclas ← →.',
+    'walkthrough.editing.title': 'Editar Jugadas',
+    'walkthrough.editing.description': 'Selecciona una jugada y escribe una nueva para reemplazarla. Usa Cmd/Ctrl+Z para deshacer.',
+    'walkthrough.deleteMenu.title': 'Eliminar Jugadas',
+    'walkthrough.deleteMenu.description': 'Clic derecho (o mantener pulsado en móvil) en una jugada para eliminarla y las siguientes.',
+    'walkthrough.export.title': 'Exportar tu Partida',
+    'walkthrough.export.description': 'Copia el PGN, descárgalo como archivo, o analiza en Lichess.',
+    'walkthrough.done.title': '¡Listo!',
+    'walkthrough.done.description': 'Empieza a escribir tu primera jugada. Haz clic en ? para ayuda.',
+    'moves.deleteLast': 'Eliminar Última',
+    'moves.clearAll': 'Borrar Todo',
   },
   it: {
     'app.placeholder': 'Inserisci mossa (es. e4, Cf3)',
-    'settings.language': 'Lingua',
     'export.copy': 'Copia PGN',
     'export.download': 'Scarica PGN',
     'export.copied': 'Copiato!',
@@ -97,10 +180,52 @@ export const UI_TRANSLATIONS: { [lang in Language]: { [key: string]: string } } 
     'error.invalidMove': 'Mossa non valida',
     'game.white': 'Bianco',
     'game.black': 'Nero',
+    'help.title': 'Come Usare',
+    'help.close': 'Chiudi',
+    'help.instructions': `**Inserire Mosse**
+Scrivi le mosse in notazione algebrica: e4, Cf3, O-O (arrocco), exd5 (catture).
+Usa le lettere dei pezzi della tua lingua (R, D, T, A, C per italiano).
+
+**Navigazione**
+← → Frecce per navigare tra le mosse
+Clicca su una mossa per selezionarla
+
+**Modifica**
+Scrivi una nuova mossa per sostituire quella selezionata
+Cmd/Ctrl + Z per annullare, Cmd/Ctrl + Shift + Z per ripristinare
+
+**Eliminare Mosse**
+Clic destro (o pressione prolungata su mobile) su una mossa per eliminarla e tutte le successive
+
+**Esportare**
+Copia il PGN o scaricalo come file .pgn
+Analizza su Lichess con un clic`,
+    'context.deleteFromHere': 'Elimina da qui',
+    'board.flip': 'Capovolgi Scacchiera',
+    'help.restartTutorial': 'Riavvia Tutorial',
+    'walkthrough.skip': 'Salta',
+    'walkthrough.next': 'Avanti',
+    'walkthrough.back': 'Indietro',
+    'walkthrough.finish': 'Inizia',
+    'walkthrough.welcome.title': 'Benvenuto in PGN Typist!',
+    'walkthrough.welcome.description': 'Facciamo un breve tour per mostrarti come trascrivere partite di scacchi.',
+    'walkthrough.enterMoves.title': 'Inserire Mosse',
+    'walkthrough.enterMoves.description': 'Scrivi le mosse qui (es. e4, Cf3). I suggerimenti appaiono mentre scrivi.',
+    'walkthrough.navigation.title': 'Navigare le Mosse',
+    'walkthrough.navigation.description': 'Clicca su una mossa per selezionarla, o usa i tasti ← →.',
+    'walkthrough.editing.title': 'Modificare Mosse',
+    'walkthrough.editing.description': 'Seleziona una mossa e scrivi una nuova per sostituirla. Usa Cmd/Ctrl+Z per annullare.',
+    'walkthrough.deleteMenu.title': 'Eliminare Mosse',
+    'walkthrough.deleteMenu.description': 'Clic destro (o pressione prolungata su mobile) su una mossa per eliminarla e le successive.',
+    'walkthrough.export.title': 'Esportare la Partita',
+    'walkthrough.export.description': 'Copia il PGN, scaricalo come file, o analizza su Lichess.',
+    'walkthrough.done.title': 'Pronto!',
+    'walkthrough.done.description': 'Inizia a scrivere la tua prima mossa. Clicca su ? per aiuto.',
+    'moves.deleteLast': 'Elimina Ultima',
+    'moves.clearAll': 'Cancella Tutto',
   },
   fr: {
     'app.placeholder': 'Entrez un coup (ex. e4, Cf3)',
-    'settings.language': 'Langue',
     'export.copy': 'Copier PGN',
     'export.download': 'Télécharger PGN',
     'export.copied': 'Copié !',
@@ -113,10 +238,52 @@ export const UI_TRANSLATIONS: { [lang in Language]: { [key: string]: string } } 
     'error.invalidMove': 'Coup invalide',
     'game.white': 'Blancs',
     'game.black': 'Noirs',
+    'help.title': 'Comment Utiliser',
+    'help.close': 'Fermer',
+    'help.instructions': `**Saisir des Coups**
+Tapez les coups en notation algébrique : e4, Cf3, O-O (roque), exd5 (captures).
+Utilisez les lettres de pièces de votre langue (R, D, T, F, C pour français).
+
+**Navigation**
+← → Touches fléchées pour naviguer
+Cliquez sur un coup pour le sélectionner
+
+**Édition**
+Tapez un nouveau coup pour remplacer celui sélectionné
+Cmd/Ctrl + Z pour annuler, Cmd/Ctrl + Shift + Z pour rétablir
+
+**Supprimer des Coups**
+Clic droit (ou appui long sur mobile) sur un coup pour le supprimer ainsi que tous les suivants
+
+**Exporter**
+Copiez le PGN ou téléchargez-le en fichier .pgn
+Analysez sur Lichess en un clic`,
+    'context.deleteFromHere': 'Supprimer à partir d\'ici',
+    'board.flip': 'Retourner l\'Échiquier',
+    'help.restartTutorial': 'Relancer le Tutoriel',
+    'walkthrough.skip': 'Passer',
+    'walkthrough.next': 'Suivant',
+    'walkthrough.back': 'Retour',
+    'walkthrough.finish': 'Commencer',
+    'walkthrough.welcome.title': 'Bienvenue sur PGN Typist!',
+    'walkthrough.welcome.description': 'Faisons un tour rapide pour vous montrer comment transcrire des parties d\'échecs.',
+    'walkthrough.enterMoves.title': 'Saisir des Coups',
+    'walkthrough.enterMoves.description': 'Tapez les coups ici (ex. e4, Cf3). Les suggestions apparaissent pendant la saisie.',
+    'walkthrough.navigation.title': 'Naviguer les Coups',
+    'walkthrough.navigation.description': 'Cliquez sur un coup pour le sélectionner, ou utilisez les touches ← →.',
+    'walkthrough.editing.title': 'Modifier les Coups',
+    'walkthrough.editing.description': 'Sélectionnez un coup et tapez un nouveau pour le remplacer. Cmd/Ctrl+Z pour annuler.',
+    'walkthrough.deleteMenu.title': 'Supprimer des Coups',
+    'walkthrough.deleteMenu.description': 'Clic droit (ou appui long sur mobile) sur un coup pour le supprimer ainsi que les suivants.',
+    'walkthrough.export.title': 'Exporter la Partie',
+    'walkthrough.export.description': 'Copiez le PGN, téléchargez-le, ou analysez sur Lichess.',
+    'walkthrough.done.title': 'C\'est Parti!',
+    'walkthrough.done.description': 'Commencez à taper votre premier coup. Cliquez sur ? pour l\'aide.',
+    'moves.deleteLast': 'Supprimer Dernier',
+    'moves.clearAll': 'Tout Effacer',
   },
   ca: {
     'app.placeholder': 'Introdueix jugada (ex. e4, Cf3)',
-    'settings.language': 'Idioma',
     'export.copy': 'Copiar PGN',
     'export.download': 'Descarregar PGN',
     'export.copied': 'Copiat!',
@@ -129,10 +296,52 @@ export const UI_TRANSLATIONS: { [lang in Language]: { [key: string]: string } } 
     'error.invalidMove': 'Jugada invàlida',
     'game.white': 'Blanques',
     'game.black': 'Negres',
+    'help.title': 'Com Utilitzar',
+    'help.close': 'Tancar',
+    'help.instructions': `**Introduir Jugades**
+Escriu jugades en notació algebraica: e4, Cf3, O-O (enroc), exd5 (captures).
+Utilitza les lletres de peces del teu idioma (R, D, T, A, C per català).
+
+**Navegació**
+← → Tecles de fletxa per navegar
+Fes clic a qualsevol jugada per seleccionar-la
+
+**Edició**
+Escriu una nova jugada per substituir la seleccionada
+Cmd/Ctrl + Z per desfer, Cmd/Ctrl + Shift + Z per refer
+
+**Eliminar Jugades**
+Clic dret (o mantenir premut en mòbil) en una jugada per eliminar-la i totes les següents
+
+**Exportar**
+Copia el PGN o descarrega'l com a fitxer .pgn
+Analitza a Lichess amb un clic`,
+    'context.deleteFromHere': 'Eliminar des d\'aquí',
+    'board.flip': 'Girar Tauler',
+    'help.restartTutorial': 'Reiniciar Tutorial',
+    'walkthrough.skip': 'Ometre',
+    'walkthrough.next': 'Següent',
+    'walkthrough.back': 'Enrere',
+    'walkthrough.finish': 'Començar',
+    'walkthrough.welcome.title': 'Benvingut a PGN Typist!',
+    'walkthrough.welcome.description': 'Fem un tour ràpid per mostrar-te com transcriure partides d\'escacs.',
+    'walkthrough.enterMoves.title': 'Introduir Jugades',
+    'walkthrough.enterMoves.description': 'Escriu jugades aquí (ex. e4, Cf3). Els suggeriments apareixen mentre escrius.',
+    'walkthrough.navigation.title': 'Navegar Jugades',
+    'walkthrough.navigation.description': 'Fes clic a qualsevol jugada per seleccionar-la, o usa les tecles ← →.',
+    'walkthrough.editing.title': 'Editar Jugades',
+    'walkthrough.editing.description': 'Selecciona una jugada i escriu una nova per substituir-la. Usa Cmd/Ctrl+Z per desfer.',
+    'walkthrough.deleteMenu.title': 'Eliminar Jugades',
+    'walkthrough.deleteMenu.description': 'Clic dret (o mantenir premut en mòbil) en una jugada per eliminar-la i les següents.',
+    'walkthrough.export.title': 'Exportar la Partida',
+    'walkthrough.export.description': 'Copia el PGN, descarrega\'l, o analitza a Lichess.',
+    'walkthrough.done.title': 'Preparat!',
+    'walkthrough.done.description': 'Comença a escriure la teva primera jugada. Clica a ? per ajuda.',
+    'moves.deleteLast': 'Eliminar Última',
+    'moves.clearAll': 'Esborrar Tot',
   },
   pt: {
     'app.placeholder': 'Digite lance (ex. e4, Cf3)',
-    'settings.language': 'Idioma',
     'export.copy': 'Copiar PGN',
     'export.download': 'Baixar PGN',
     'export.copied': 'Copiado!',
@@ -145,10 +354,52 @@ export const UI_TRANSLATIONS: { [lang in Language]: { [key: string]: string } } 
     'error.invalidMove': 'Lance inválido',
     'game.white': 'Brancas',
     'game.black': 'Pretas',
+    'help.title': 'Como Usar',
+    'help.close': 'Fechar',
+    'help.instructions': `**Inserir Lances**
+Digite lances em notação algébrica: e4, Cf3, O-O (roque), exd5 (capturas).
+Use as letras das peças do seu idioma (R, D, T, B, C para português).
+
+**Navegação**
+← → Teclas de seta para navegar
+Clique em qualquer lance para selecioná-lo
+
+**Edição**
+Digite um novo lance para substituir o selecionado
+Cmd/Ctrl + Z para desfazer, Cmd/Ctrl + Shift + Z para refazer
+
+**Excluir Lances**
+Clique direito (ou pressione longamente no celular) em um lance para excluí-lo e todos os seguintes
+
+**Exportar**
+Copie o PGN ou baixe como arquivo .pgn
+Analise no Lichess com um clique`,
+    'context.deleteFromHere': 'Excluir daqui',
+    'board.flip': 'Virar Tabuleiro',
+    'help.restartTutorial': 'Reiniciar Tutorial',
+    'walkthrough.skip': 'Pular',
+    'walkthrough.next': 'Próximo',
+    'walkthrough.back': 'Voltar',
+    'walkthrough.finish': 'Começar',
+    'walkthrough.welcome.title': 'Bem-vindo ao PGN Typist!',
+    'walkthrough.welcome.description': 'Vamos fazer um tour rápido para mostrar como transcrever partidas de xadrez.',
+    'walkthrough.enterMoves.title': 'Inserir Lances',
+    'walkthrough.enterMoves.description': 'Digite lances aqui (ex. e4, Cf3). Sugestões aparecem enquanto você digita.',
+    'walkthrough.navigation.title': 'Navegar Lances',
+    'walkthrough.navigation.description': 'Clique em qualquer lance para selecioná-lo, ou use as teclas ← →.',
+    'walkthrough.editing.title': 'Editar Lances',
+    'walkthrough.editing.description': 'Selecione um lance e digite um novo para substituí-lo. Use Cmd/Ctrl+Z para desfazer.',
+    'walkthrough.deleteMenu.title': 'Excluir Lances',
+    'walkthrough.deleteMenu.description': 'Clique direito (ou pressione longamente no celular) em um lance para excluí-lo e os seguintes.',
+    'walkthrough.export.title': 'Exportar a Partida',
+    'walkthrough.export.description': 'Copie o PGN, baixe como arquivo, ou analise no Lichess.',
+    'walkthrough.done.title': 'Pronto!',
+    'walkthrough.done.description': 'Comece a digitar seu primeiro lance. Clique em ? para ajuda.',
+    'moves.deleteLast': 'Excluir Último',
+    'moves.clearAll': 'Limpar Tudo',
   },
   el: {
     'app.placeholder': 'Εισάγετε κίνηση (π.χ. e4, Ιf3)',
-    'settings.language': 'Γλώσσα',
     'export.copy': 'Αντιγραφή PGN',
     'export.download': 'Λήψη PGN',
     'export.copied': 'Αντιγράφηκε!',
@@ -161,10 +412,52 @@ export const UI_TRANSLATIONS: { [lang in Language]: { [key: string]: string } } 
     'error.invalidMove': 'Μη έγκυρη κίνηση',
     'game.white': 'Λευκά',
     'game.black': 'Μαύρα',
+    'help.title': 'Πώς να Χρησιμοποιήσετε',
+    'help.close': 'Κλείσιμο',
+    'help.instructions': `**Εισαγωγή Κινήσεων**
+Πληκτρολογήστε κινήσεις σε αλγεβρική σημειογραφία: e4, Ιf3, O-O (ροκέ), exd5 (αιχμαλωσίες).
+Χρησιμοποιήστε τα γράμματα κομματιών της γλώσσας σας (Ρ, Β, Π, Α, Ι για ελληνικά).
+
+**Πλοήγηση**
+← → Πλήκτρα βέλους για περιήγηση
+Κάντε κλικ σε οποιαδήποτε κίνηση για να την επιλέξετε
+
+**Επεξεργασία**
+Πληκτρολογήστε μια νέα κίνηση για να αντικαταστήσετε την επιλεγμένη
+Cmd/Ctrl + Z για αναίρεση, Cmd/Ctrl + Shift + Z για επανάληψη
+
+**Διαγραφή Κινήσεων**
+Δεξί κλικ (ή παρατεταμένο πάτημα σε κινητό) σε μια κίνηση για να τη διαγράψετε μαζί με όλες τις επόμενες
+
+**Εξαγωγή**
+Αντιγράψτε το PGN ή κατεβάστε το ως αρχείο .pgn
+Αναλύστε στο Lichess με ένα κλικ`,
+    'context.deleteFromHere': 'Διαγραφή από εδώ',
+    'board.flip': 'Αναποδογύρισε τη Σκακιέρα',
+    'help.restartTutorial': 'Επανεκκίνηση Εκμάθησης',
+    'walkthrough.skip': 'Παράλειψη',
+    'walkthrough.next': 'Επόμενο',
+    'walkthrough.back': 'Πίσω',
+    'walkthrough.finish': 'Ξεκίνα',
+    'walkthrough.welcome.title': 'Καλώς ήρθατε στο PGN Typist!',
+    'walkthrough.welcome.description': 'Ας κάνουμε μια γρήγορη ξενάγηση για να δείτε πώς να μεταγράψετε παρτίδες σκάκι.',
+    'walkthrough.enterMoves.title': 'Εισαγωγή Κινήσεων',
+    'walkthrough.enterMoves.description': 'Πληκτρολογήστε κινήσεις εδώ (π.χ. e4, Ιf3). Προτάσεις εμφανίζονται καθώς πληκτρολογείτε.',
+    'walkthrough.navigation.title': 'Πλοήγηση Κινήσεων',
+    'walkthrough.navigation.description': 'Κάντε κλικ σε οποιαδήποτε κίνηση για να την επιλέξετε, ή χρησιμοποιήστε τα πλήκτρα ← →.',
+    'walkthrough.editing.title': 'Επεξεργασία Κινήσεων',
+    'walkthrough.editing.description': 'Επιλέξτε μια κίνηση και πληκτρολογήστε μια νέα για να την αντικαταστήσετε. Cmd/Ctrl+Z για αναίρεση.',
+    'walkthrough.deleteMenu.title': 'Διαγραφή Κινήσεων',
+    'walkthrough.deleteMenu.description': 'Δεξί κλικ (ή παρατεταμένο πάτημα σε κινητό) σε κίνηση για διαγραφή αυτής και των επόμενων.',
+    'walkthrough.export.title': 'Εξαγωγή Παρτίδας',
+    'walkthrough.export.description': 'Αντιγράψτε το PGN, κατεβάστε το, ή αναλύστε στο Lichess.',
+    'walkthrough.done.title': 'Έτοιμοι!',
+    'walkthrough.done.description': 'Αρχίστε να πληκτρολογείτε την πρώτη σας κίνηση. Κάντε κλικ στο ? για βοήθεια.',
+    'moves.deleteLast': 'Διαγραφή Τελευταίας',
+    'moves.clearAll': 'Διαγραφή Όλων',
   },
   ru: {
     'app.placeholder': 'Введите ход (напр. e4, Кf3)',
-    'settings.language': 'Язык',
     'export.copy': 'Копировать PGN',
     'export.download': 'Скачать PGN',
     'export.copied': 'Скопировано!',
@@ -177,10 +470,52 @@ export const UI_TRANSLATIONS: { [lang in Language]: { [key: string]: string } } 
     'error.invalidMove': 'Недопустимый ход',
     'game.white': 'Белые',
     'game.black': 'Чёрные',
+    'help.title': 'Как Использовать',
+    'help.close': 'Закрыть',
+    'help.instructions': `**Ввод Ходов**
+Вводите ходы в алгебраической нотации: e4, Кf3, O-O (рокировка), exd5 (взятия).
+Используйте буквы фигур вашего языка (Кр, Ф, Л, С, К для русского).
+
+**Навигация**
+← → Стрелки для навигации
+Нажмите на любой ход, чтобы выбрать его
+
+**Редактирование**
+Введите новый ход, чтобы заменить выбранный
+Cmd/Ctrl + Z для отмены, Cmd/Ctrl + Shift + Z для повтора
+
+**Удаление Ходов**
+Правый клик (или долгое нажатие на мобильном) на ходе, чтобы удалить его и все последующие
+
+**Экспорт**
+Скопируйте PGN или скачайте как файл .pgn
+Анализируйте на Lichess одним кликом`,
+    'context.deleteFromHere': 'Удалить отсюда',
+    'board.flip': 'Перевернуть Доску',
+    'help.restartTutorial': 'Перезапустить Обучение',
+    'walkthrough.skip': 'Пропустить',
+    'walkthrough.next': 'Далее',
+    'walkthrough.back': 'Назад',
+    'walkthrough.finish': 'Начать',
+    'walkthrough.welcome.title': 'Добро пожаловать в PGN Typist!',
+    'walkthrough.welcome.description': 'Давайте сделаем быстрый обзор, чтобы показать, как транскрибировать шахматные партии.',
+    'walkthrough.enterMoves.title': 'Ввод Ходов',
+    'walkthrough.enterMoves.description': 'Вводите ходы здесь (напр. e4, Кf3). Подсказки появляются при вводе.',
+    'walkthrough.navigation.title': 'Навигация по Ходам',
+    'walkthrough.navigation.description': 'Нажмите на любой ход для выбора, или используйте клавиши ← →.',
+    'walkthrough.editing.title': 'Редактирование Ходов',
+    'walkthrough.editing.description': 'Выберите ход и введите новый для замены. Cmd/Ctrl+Z для отмены.',
+    'walkthrough.deleteMenu.title': 'Удаление Ходов',
+    'walkthrough.deleteMenu.description': 'Правый клик (или долгое нажатие на мобильном) на ходе для удаления его и последующих.',
+    'walkthrough.export.title': 'Экспорт Партии',
+    'walkthrough.export.description': 'Скопируйте PGN, скачайте файл, или анализируйте на Lichess.',
+    'walkthrough.done.title': 'Готово!',
+    'walkthrough.done.description': 'Начните вводить первый ход. Нажмите ? для помощи.',
+    'moves.deleteLast': 'Удалить Последний',
+    'moves.clearAll': 'Очистить Всё',
   },
   nl: {
     'app.placeholder': 'Voer zet in (bijv. e4, Pf3)',
-    'settings.language': 'Taal',
     'export.copy': 'Kopieer PGN',
     'export.download': 'Download PGN',
     'export.copied': 'Gekopieerd!',
@@ -193,10 +528,52 @@ export const UI_TRANSLATIONS: { [lang in Language]: { [key: string]: string } } 
     'error.invalidMove': 'Ongeldige zet',
     'game.white': 'Wit',
     'game.black': 'Zwart',
+    'help.title': 'Hoe te Gebruiken',
+    'help.close': 'Sluiten',
+    'help.instructions': `**Zetten Invoeren**
+Typ zetten in algebraïsche notatie: e4, Pf3, O-O (rokade), exd5 (slagen).
+Gebruik de stukletters van je taal (K, D, T, L, P voor Nederlands).
+
+**Navigatie**
+← → Pijltjestoetsen om te navigeren
+Klik op een zet om deze te selecteren
+
+**Bewerken**
+Typ een nieuwe zet om de geselecteerde te vervangen
+Cmd/Ctrl + Z om ongedaan te maken, Cmd/Ctrl + Shift + Z om opnieuw te doen
+
+**Zetten Verwijderen**
+Rechtsklik (of lang indrukken op mobiel) op een zet om deze en alle volgende te verwijderen
+
+**Exporteren**
+Kopieer PGN of download als .pgn-bestand
+Analyseer op Lichess met één klik`,
+    'context.deleteFromHere': 'Verwijder vanaf hier',
+    'board.flip': 'Bord Draaien',
+    'help.restartTutorial': 'Tutorial Herstarten',
+    'walkthrough.skip': 'Overslaan',
+    'walkthrough.next': 'Volgende',
+    'walkthrough.back': 'Terug',
+    'walkthrough.finish': 'Starten',
+    'walkthrough.welcome.title': 'Welkom bij PGN Typist!',
+    'walkthrough.welcome.description': 'Laten we een snelle rondleiding maken om te laten zien hoe je schaakpartijen transcribeert.',
+    'walkthrough.enterMoves.title': 'Zetten Invoeren',
+    'walkthrough.enterMoves.description': 'Typ zetten hier (bijv. e4, Pf3). Suggesties verschijnen terwijl je typt.',
+    'walkthrough.navigation.title': 'Zetten Navigeren',
+    'walkthrough.navigation.description': 'Klik op een zet om deze te selecteren, of gebruik de ← → toetsen.',
+    'walkthrough.editing.title': 'Zetten Bewerken',
+    'walkthrough.editing.description': 'Selecteer een zet en typ een nieuwe om te vervangen. Cmd/Ctrl+Z om ongedaan te maken.',
+    'walkthrough.deleteMenu.title': 'Zetten Verwijderen',
+    'walkthrough.deleteMenu.description': 'Rechtsklik (of lang indrukken op mobiel) op een zet om deze en volgende te verwijderen.',
+    'walkthrough.export.title': 'Partij Exporteren',
+    'walkthrough.export.description': 'Kopieer PGN, download als bestand, of analyseer op Lichess.',
+    'walkthrough.done.title': 'Klaar!',
+    'walkthrough.done.description': 'Begin met het typen van je eerste zet. Klik op ? voor hulp.',
+    'moves.deleteLast': 'Laatste Verwijderen',
+    'moves.clearAll': 'Alles Wissen',
   },
   no: {
     'app.placeholder': 'Skriv trekk (f.eks. e4, Sf3)',
-    'settings.language': 'Språk',
     'export.copy': 'Kopier PGN',
     'export.download': 'Last ned PGN',
     'export.copied': 'Kopiert!',
@@ -209,10 +586,52 @@ export const UI_TRANSLATIONS: { [lang in Language]: { [key: string]: string } } 
     'error.invalidMove': 'Ugyldig trekk',
     'game.white': 'Hvit',
     'game.black': 'Svart',
+    'help.title': 'Hvordan Bruke',
+    'help.close': 'Lukk',
+    'help.instructions': `**Skrive Trekk**
+Skriv trekk i algebraisk notasjon: e4, Sf3, O-O (rokade), exd5 (slag).
+Bruk brikkebokstavene for ditt språk (K, D, T, L, S for norsk).
+
+**Navigasjon**
+← → Piltaster for å navigere
+Klikk på et trekk for å velge det
+
+**Redigering**
+Skriv et nytt trekk for å erstatte det valgte
+Cmd/Ctrl + Z for å angre, Cmd/Ctrl + Shift + Z for å gjenta
+
+**Slette Trekk**
+Høyreklikk (eller langt trykk på mobil) på et trekk for å slette det og alle følgende
+
+**Eksportere**
+Kopier PGN eller last ned som .pgn-fil
+Analyser på Lichess med ett klikk`,
+    'context.deleteFromHere': 'Slett herfra',
+    'board.flip': 'Snu Brettet',
+    'help.restartTutorial': 'Start Opplæring på Nytt',
+    'walkthrough.skip': 'Hopp over',
+    'walkthrough.next': 'Neste',
+    'walkthrough.back': 'Tilbake',
+    'walkthrough.finish': 'Start',
+    'walkthrough.welcome.title': 'Velkommen til PGN Typist!',
+    'walkthrough.welcome.description': 'La oss ta en rask omvisning for å vise deg hvordan du transkriberer sjakkpartier.',
+    'walkthrough.enterMoves.title': 'Skrive Trekk',
+    'walkthrough.enterMoves.description': 'Skriv trekk her (f.eks. e4, Sf3). Forslag vises mens du skriver.',
+    'walkthrough.navigation.title': 'Navigere Trekk',
+    'walkthrough.navigation.description': 'Klikk på et trekk for å velge det, eller bruk ← → tastene.',
+    'walkthrough.editing.title': 'Redigere Trekk',
+    'walkthrough.editing.description': 'Velg et trekk og skriv et nytt for å erstatte det. Cmd/Ctrl+Z for å angre.',
+    'walkthrough.deleteMenu.title': 'Slette Trekk',
+    'walkthrough.deleteMenu.description': 'Høyreklikk (eller langt trykk på mobil) på et trekk for å slette det og følgende.',
+    'walkthrough.export.title': 'Eksportere Parti',
+    'walkthrough.export.description': 'Kopier PGN, last ned som fil, eller analyser på Lichess.',
+    'walkthrough.done.title': 'Klar!',
+    'walkthrough.done.description': 'Begynn å skrive ditt første trekk. Klikk på ? for hjelp.',
+    'moves.deleteLast': 'Slett Siste',
+    'moves.clearAll': 'Tøm Alt',
   },
   sv: {
     'app.placeholder': 'Ange drag (t.ex. e4, Sf3)',
-    'settings.language': 'Språk',
     'export.copy': 'Kopiera PGN',
     'export.download': 'Ladda ner PGN',
     'export.copied': 'Kopierat!',
@@ -225,10 +644,52 @@ export const UI_TRANSLATIONS: { [lang in Language]: { [key: string]: string } } 
     'error.invalidMove': 'Ogiltigt drag',
     'game.white': 'Vit',
     'game.black': 'Svart',
+    'help.title': 'Hur man Använder',
+    'help.close': 'Stäng',
+    'help.instructions': `**Ange Drag**
+Skriv drag i algebraisk notation: e4, Sf3, O-O (rockad), exd5 (slag).
+Använd pjäsbokstäverna för ditt språk (K, D, T, L, S för svenska).
+
+**Navigering**
+← → Piltangenter för att navigera
+Klicka på ett drag för att välja det
+
+**Redigering**
+Skriv ett nytt drag för att ersätta det valda
+Cmd/Ctrl + Z för att ångra, Cmd/Ctrl + Shift + Z för att göra om
+
+**Ta bort Drag**
+Högerklicka (eller långt tryck på mobil) på ett drag för att ta bort det och alla följande
+
+**Exportera**
+Kopiera PGN eller ladda ner som .pgn-fil
+Analysera på Lichess med ett klick`,
+    'context.deleteFromHere': 'Ta bort härifrån',
+    'board.flip': 'Vänd Brädet',
+    'help.restartTutorial': 'Starta om Handledning',
+    'walkthrough.skip': 'Hoppa över',
+    'walkthrough.next': 'Nästa',
+    'walkthrough.back': 'Tillbaka',
+    'walkthrough.finish': 'Börja',
+    'walkthrough.welcome.title': 'Välkommen till PGN Typist!',
+    'walkthrough.welcome.description': 'Låt oss ta en snabb rundtur för att visa hur du transkriberar schackpartier.',
+    'walkthrough.enterMoves.title': 'Ange Drag',
+    'walkthrough.enterMoves.description': 'Skriv drag här (t.ex. e4, Sf3). Förslag visas medan du skriver.',
+    'walkthrough.navigation.title': 'Navigera Drag',
+    'walkthrough.navigation.description': 'Klicka på ett drag för att välja det, eller använd ← → tangenterna.',
+    'walkthrough.editing.title': 'Redigera Drag',
+    'walkthrough.editing.description': 'Välj ett drag och skriv ett nytt för att ersätta det. Cmd/Ctrl+Z för att ångra.',
+    'walkthrough.deleteMenu.title': 'Ta bort Drag',
+    'walkthrough.deleteMenu.description': 'Högerklicka (eller långt tryck på mobil) på ett drag för att ta bort det och följande.',
+    'walkthrough.export.title': 'Exportera Parti',
+    'walkthrough.export.description': 'Kopiera PGN, ladda ner som fil, eller analysera på Lichess.',
+    'walkthrough.done.title': 'Redo!',
+    'walkthrough.done.description': 'Börja skriva ditt första drag. Klicka på ? för hjälp.',
+    'moves.deleteLast': 'Ta bort Senaste',
+    'moves.clearAll': 'Rensa Allt',
   },
   fi: {
     'app.placeholder': 'Syötä siirto (esim. e4, Rf3)',
-    'settings.language': 'Kieli',
     'export.copy': 'Kopioi PGN',
     'export.download': 'Lataa PGN',
     'export.copied': 'Kopioitu!',
@@ -241,6 +702,49 @@ export const UI_TRANSLATIONS: { [lang in Language]: { [key: string]: string } } 
     'error.invalidMove': 'Virheellinen siirto',
     'game.white': 'Valkoinen',
     'game.black': 'Musta',
+    'help.title': 'Käyttöohjeet',
+    'help.close': 'Sulje',
+    'help.instructions': `**Siirtojen Syöttäminen**
+Kirjoita siirrot algebrallisessa merkinnässä: e4, Rf3, O-O (linnoitus), exd5 (lyönnit).
+Käytä kielesi nappulakirjaimia (K, D, T, L, R suomeksi).
+
+**Navigointi**
+← → Nuolinäppäimet selaamiseen
+Napsauta siirtoa valitaksesi sen
+
+**Muokkaus**
+Kirjoita uusi siirto korvataksesi valitun
+Cmd/Ctrl + Z kumotaksesi, Cmd/Ctrl + Shift + Z toistaaksesi
+
+**Siirtojen Poistaminen**
+Oikea napsautus (tai pitkä painallus mobiilissa) siirrossa poistaaksesi sen ja kaikki seuraavat
+
+**Vienti**
+Kopioi PGN tai lataa .pgn-tiedostona
+Analysoi Lichessissä yhdellä napsautuksella`,
+    'context.deleteFromHere': 'Poista tästä eteenpäin',
+    'board.flip': 'Käännä Lauta',
+    'help.restartTutorial': 'Aloita Opas Uudelleen',
+    'walkthrough.skip': 'Ohita',
+    'walkthrough.next': 'Seuraava',
+    'walkthrough.back': 'Takaisin',
+    'walkthrough.finish': 'Aloita',
+    'walkthrough.welcome.title': 'Tervetuloa PGN Typistiin!',
+    'walkthrough.welcome.description': 'Tehdään nopea kierros näyttääksemme miten shakkipelejä kirjataan.',
+    'walkthrough.enterMoves.title': 'Syötä Siirtoja',
+    'walkthrough.enterMoves.description': 'Kirjoita siirrot tähän (esim. e4, Rf3). Ehdotukset näkyvät kirjoittaessa.',
+    'walkthrough.navigation.title': 'Selaa Siirtoja',
+    'walkthrough.navigation.description': 'Napsauta siirtoa valitaksesi sen, tai käytä ← → näppäimiä.',
+    'walkthrough.editing.title': 'Muokkaa Siirtoja',
+    'walkthrough.editing.description': 'Valitse siirto ja kirjoita uusi korvataksesi sen. Cmd/Ctrl+Z kumoamiseen.',
+    'walkthrough.deleteMenu.title': 'Poista Siirtoja',
+    'walkthrough.deleteMenu.description': 'Oikea napsautus (tai pitkä painallus mobiilissa) siirrossa poistaaksesi sen ja seuraavat.',
+    'walkthrough.export.title': 'Vie Peli',
+    'walkthrough.export.description': 'Kopioi PGN, lataa tiedostona, tai analysoi Lichessissä.',
+    'walkthrough.done.title': 'Valmis!',
+    'walkthrough.done.description': 'Aloita kirjoittamalla ensimmäinen siirtosi. Napsauta ? saadaksesi apua.',
+    'moves.deleteLast': 'Poista Viimeinen',
+    'moves.clearAll': 'Tyhjennä Kaikki',
   },
 };
 
@@ -250,7 +754,7 @@ export function t(lang: Language, key: string): string {
 
 export function toEnglishSAN(san: string, lang: Language): string {
   if (lang === 'en') return san;
-  
+
   const map = REVERSE_PIECE_MAP[lang];
   // Handle multi-character pieces like Russian Кр (King)
   let result = san;
@@ -265,7 +769,7 @@ export function toEnglishSAN(san: string, lang: Language): string {
 
 export function toLocalizedSAN(san: string, lang: Language): string {
   if (lang === 'en') return san;
-  
+
   const map = PIECE_MAP[lang];
   // Handle multi-character pieces like Russian Кр (King)
   if (lang === 'ru') {
@@ -277,7 +781,7 @@ export function toLocalizedSAN(san: string, lang: Language): string {
       return char;
     }).join('');
   }
-  
+
   return san.split('').map(char => {
     if (PIECE_MAP['en'][char]) {
       return map[char] || char;
