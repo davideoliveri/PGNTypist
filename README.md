@@ -4,7 +4,7 @@ A fast, keyboard-first web app for transcribing chess games into PGN (Portable G
 
 **[→ Try it live](https://davideoliveri.github.io/PGNTypist/)**
 
-![PGN Typist Screenshot](public/logo.svg)
+![PGN Typist Demo Gif](docs/assets/pgntypist-demo.gif)
 
 ## Features
 
