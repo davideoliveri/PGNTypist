@@ -24,6 +24,7 @@ export const MoveList: React.FC<MoveListProps> = ({ moves, selectedIndex, onSele
     y: 0,
     moveIndex: -1
   });
+  const [longPressIndex, setLongPressIndex] = useState<number | null>(null);
 
   // Chunk moves into pairs
   const rows = [];
@@ -50,11 +51,12 @@ export const MoveList: React.FC<MoveListProps> = ({ moves, selectedIndex, onSele
     }
   }, [selectedIndex, moves.length]);
 
-  // Close context menu when clicking outside
+  // Close context menu when clicking outside and clear highlight
   useEffect(() => {
     const handleClickOutside = () => {
       if (contextMenu.visible) {
         setContextMenu(prev => ({ ...prev, visible: false }));
+        setLongPressIndex(null);
       }
     };
 
@@ -76,6 +78,7 @@ export const MoveList: React.FC<MoveListProps> = ({ moves, selectedIndex, onSele
       y,
       moveIndex: index
     });
+    setLongPressIndex(index);
   };
 
   const handleDeleteFromHere = () => {
@@ -83,6 +86,7 @@ export const MoveList: React.FC<MoveListProps> = ({ moves, selectedIndex, onSele
       onDeleteFrom(contextMenu.moveIndex);
     }
     setContextMenu(prev => ({ ...prev, visible: false }));
+    setLongPressIndex(null);
   };
 
   return (
@@ -113,6 +117,7 @@ export const MoveList: React.FC<MoveListProps> = ({ moves, selectedIndex, onSele
               san={row.white.san}
               lang={lang}
               isSelected={selectedIndex === row.white.index}
+              isHighlighted={longPressIndex === row.white.index}
               onClick={onSelect}
               onContextMenu={handleContextMenu}
             />
@@ -123,6 +128,7 @@ export const MoveList: React.FC<MoveListProps> = ({ moves, selectedIndex, onSele
                 san={row.black.san}
                 lang={lang}
                 isSelected={selectedIndex === row.black.index}
+                isHighlighted={longPressIndex === row.black.index}
                 onClick={onSelect}
                 onContextMenu={handleContextMenu}
               />
@@ -179,9 +185,10 @@ const MoveItem: React.FC<{
   san: string,
   lang: Language,
   isSelected: boolean,
-  onClick: (i: number) => void,
+  isHighlighted: boolean,
+  onClick: (i: number | null) => void,
   onContextMenu: (e: React.MouseEvent, index: number) => void
-}> = ({ index, san, lang, isSelected, onClick, onContextMenu }) => {
+}> = ({ index, san, lang, isSelected, isHighlighted, onClick, onContextMenu }) => {
   const longPressTimer = useRef<number | null>(null);
   const [isLongPress, setIsLongPress] = useState(false);
 
@@ -210,9 +217,17 @@ const MoveItem: React.FC<{
 
   const handleClick = () => {
     if (!isLongPress) {
-      onClick(index);
+      // Toggle: if already selected, deselect (null), otherwise select this index
+      onClick(isSelected ? null : index);
     }
     setIsLongPress(false);
+  };
+
+  // Determine background color: highlighted (long-press) > selected (navigation)
+  const getBackgroundColor = () => {
+    if (isHighlighted) return '#8b4513'; // Orange/brown for delete action
+    if (isSelected) return '#3a6ea5';    // Blue for navigation
+    return 'transparent';
   };
 
   return (
@@ -227,8 +242,8 @@ const MoveItem: React.FC<{
         cursor: 'pointer',
         padding: '2px 6px',
         borderRadius: '4px',
-        backgroundColor: isSelected ? '#3a6ea5' : 'transparent',
-        color: isSelected ? '#fff' : '#ccc',
+        backgroundColor: getBackgroundColor(),
+        color: (isSelected || isHighlighted) ? '#fff' : '#ccc',
         minWidth: '60px',
         userSelect: 'none',
         WebkitUserSelect: 'none',
