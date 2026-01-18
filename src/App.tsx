@@ -1,8 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useChessGame } from './logic/chessAdapter';
 import { type Language, SUPPORTED_LANGUAGES, t } from './logic/localization';
 import { MoveList } from './components/MoveList';
-import { MoveInput } from './components/MoveInput';
+import { MoveInput, type MoveInputHandle } from './components/MoveInput';
 import { MetadataEditor } from './components/MetadataEditor';
 import { MiniBoard } from './components/MiniBoard';
 import { HelpModal } from './components/HelpModal';
@@ -48,6 +48,7 @@ function App() {
     const [showHelp, setShowHelp] = useState(false);
     const [showWalkthrough, setShowWalkthrough] = useState(false);
     const [boardOrientation, setBoardOrientation] = useState<'white' | 'black'>('white');
+    const moveInputRef = useRef<MoveInputHandle>(null);
 
     // Check if first-time user for walkthrough
     useEffect(() => {
@@ -358,6 +359,7 @@ function App() {
                 {/* Input Area */}
                 <div style={{ marginTop: '10px', width: '100%', maxWidth: '900px', marginLeft: 'auto', marginRight: 'auto' }}>
                     <MoveInput
+                        ref={moveInputRef}
                         onMove={addMove}
                         legalMoves={legalMoves(lang)}
                         lang={lang}
@@ -495,10 +497,12 @@ function App() {
                 onComplete={() => {
                     localStorage.setItem(WALKTHROUGH_KEY, 'true');
                     setShowWalkthrough(false);
+                    moveInputRef.current?.focus();
                 }}
                 onSkip={() => {
                     localStorage.setItem(WALKTHROUGH_KEY, 'true');
                     setShowWalkthrough(false);
+                    moveInputRef.current?.focus();
                 }}
                 lang={lang}
             />
