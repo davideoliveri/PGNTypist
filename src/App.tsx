@@ -10,6 +10,47 @@ import { Walkthrough } from './components/Walkthrough';
 import './App.css';
 
 const WALKTHROUGH_KEY = 'pgn-typist-walkthrough-done';
+const MOVES_STORAGE_KEY = 'pgn-typist-moves';
+const HEADERS_STORAGE_KEY = 'pgn-typist-headers';
+
+const DEFAULT_HEADERS: { [key: string]: string } = {
+    'Event': '??',
+    'Date': new Date().toISOString().split('T')[0].replace(/-/g, '.'),
+    'Site': '??',
+    'White': '??',
+    'Black': '??',
+    'Result': '*'
+};
+
+// Load moves from localStorage
+const getInitialMoves = (): string[] => {
+    try {
+        const stored = localStorage.getItem(MOVES_STORAGE_KEY);
+        if (stored) {
+            const parsed = JSON.parse(stored);
+            if (Array.isArray(parsed)) return parsed;
+        }
+    } catch (e) {
+        // Ignore parse errors
+    }
+    return [];
+};
+
+// Load headers from localStorage, preserving custom keys
+const getInitialHeaders = (): { [key: string]: string } => {
+    try {
+        const stored = localStorage.getItem(HEADERS_STORAGE_KEY);
+        if (stored) {
+            const parsed = JSON.parse(stored);
+            if (typeof parsed === 'object' && parsed !== null) {
+                return parsed;
+            }
+        }
+    } catch (e) {
+        // Ignore parse errors
+    }
+    return { ...DEFAULT_HEADERS };
+};
 
 function App() {
     // Detect language: localStorage > browser > fallback to 'en'
@@ -35,14 +76,7 @@ function App() {
         localStorage.setItem('pgn-typist-lang', lang);
     }, [lang]);
 
-    const [headers, setHeaders] = useState<{ [key: string]: string }>({
-        'Event': '??',
-        'Date': new Date().toISOString().split('T')[0].replace(/-/g, '.'),
-        'Site': '??',
-        'White': '??',
-        'Black': '??',
-        'Result': '*'
-    });
+    const [headers, setHeaders] = useState<{ [key: string]: string }>(getInitialHeaders);
     const [notification, setNotification] = useState<string | null>(null);
     const [isMobile, setIsMobile] = useState(window.innerWidth <= 640);
     const [showHelp, setShowHelp] = useState(false);
@@ -116,7 +150,17 @@ function App() {
         result,
         isGameOver,
         fen
-    } = useChessGame();
+    } = useChessGame(getInitialMoves());
+
+    // Persist moves to localStorage
+    useEffect(() => {
+        localStorage.setItem(MOVES_STORAGE_KEY, JSON.stringify(moveList));
+    }, [moveList]);
+
+    // Persist headers to localStorage
+    useEffect(() => {
+        localStorage.setItem(HEADERS_STORAGE_KEY, JSON.stringify(headers));
+    }, [headers]);
 
     // Update Result in headers if game over
     useEffect(() => {
@@ -376,7 +420,19 @@ function App() {
 
             <footer style={{ marginTop: 'auto', display: 'flex', flexDirection: 'column', gap: '15px', paddingBottom: '20px' }}>
                 <div style={{ marginBottom: '10px' }}>
-                    <MetadataEditor headers={headers} onChange={setHeaders} />
+                    <MetadataEditor
+                        headers={headers}
+                        onChange={setHeaders}
+                        onResetValues={() => {
+                            // Reset all values to "??" but keep keys (including custom ones)
+                            const resetHeaders: { [key: string]: string } = {};
+                            for (const key of Object.keys(headers)) {
+                                resetHeaders[key] = '??';
+                            }
+                            setHeaders(resetHeaders);
+                        }}
+                        lang={lang}
+                    />
                 </div>
                 <div style={{ display: 'flex', gap: '10px', justifyContent: 'center' }}>
                     <button onClick={() => handleExport('copy')}>

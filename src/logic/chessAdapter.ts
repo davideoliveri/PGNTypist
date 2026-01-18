@@ -13,9 +13,9 @@ export interface GameState {
   history: { ply: number; move: Move }[]; // Detailed history from chess.js
 }
 
-export function useChessGame() {
+export function useChessGame(initialMoves: string[] = []) {
   // The source of truth is the array of moves (English SAN).
-  const [moves, setMoves] = useState<string[]>([]);
+  const [moves, setMoves] = useState<string[]>(initialMoves);
   // History for Undo/Redo (of the moves array itself)
   const [historyStack, setHistoryStack] = useState<string[][]>([]);
   const [redoStack, setRedoStack] = useState<string[][]>([]);
@@ -169,6 +169,14 @@ export function useChessGame() {
     setSelectedIndex(null);
   }, [moves]);
 
+  // Load moves without affecting undo history (for initial load from localStorage)
+  const loadMoves = useCallback((newMoves: string[]) => {
+    setMoves(newMoves);
+    setHistoryStack([]);
+    setRedoStack([]);
+    setSelectedIndex(null);
+  }, []);
+
   return {
     fen: cursorGame.fen(),
     moveList: moves, // The source of truth
@@ -178,6 +186,7 @@ export function useChessGame() {
     truncateFromIndex,
     deleteLast,
     clearAll,
+    loadMoves,
     undo,
     redo,
     canUndo: historyStack.length > 0,
