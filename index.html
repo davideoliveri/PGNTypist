@@ -36,12 +36,48 @@
   <div id="root"></div>
   <script type="module" src="/src/main.tsx"></script>
   <script>
-    // Register service worker
+    // Register service worker with update detection
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
         navigator.serviceWorker.register('./sw.js')
-          .then(reg => console.log('SW registered:', reg.scope))
+          .then(reg => {
+            console.log('SW registered:', reg.scope);
+            
+            // Check for updates periodically (every 5 minutes)
+            setInterval(() => {
+              reg.update().catch(() => {});
+            }, 5 * 60 * 1000);
+            
+            // Listen for new service worker installing
+            reg.addEventListener('updatefound', () => {
+              const newWorker = reg.installing;
+              if (newWorker) {
+                newWorker.addEventListener('statechange', () => {
+                  if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                    // New version installed but waiting
+                    window.dispatchEvent(new CustomEvent('sw-update-available'));
+                  }
+                });
+              }
+            });
+          })
           .catch(err => console.log('SW registration failed:', err));
+        
+        // Listen for messages from service worker
+        navigator.serviceWorker.addEventListener('message', (event) => {
+          if (event.data && event.data.type === 'SW_UPDATED') {
+            window.dispatchEvent(new CustomEvent('sw-update-available'));
+          }
+        });
+        
+        // Handle controller change (new SW took over)
+        navigator.serviceWorker.addEventListener('controllerchange', () => {
+          // Only reload if we're not already reloading
+          if (!window.__swReloading) {
+            window.__swReloading = true;
+            window.location.reload();
+          }
+        });
       });
     }
   </script>

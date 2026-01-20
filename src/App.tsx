@@ -82,7 +82,15 @@ function App() {
     const [showHelp, setShowHelp] = useState(false);
     const [showWalkthrough, setShowWalkthrough] = useState(false);
     const [boardOrientation, setBoardOrientation] = useState<'white' | 'black'>('white');
+    const [updateAvailable, setUpdateAvailable] = useState(false);
     const moveInputRef = useRef<MoveInputHandle>(null);
+
+    // Listen for service worker updates
+    useEffect(() => {
+        const handleUpdate = () => setUpdateAvailable(true);
+        window.addEventListener('sw-update-available', handleUpdate);
+        return () => window.removeEventListener('sw-update-available', handleUpdate);
+    }, []);
 
     // Check if first-time user for walkthrough
     useEffect(() => {
@@ -276,6 +284,15 @@ function App() {
             boxSizing: 'border-box',
             gap: '20px'
         }}>
+            {/* Update Available Banner */}
+            {updateAvailable && (
+                <div className="update-banner">
+                    <span>🔄 {t(lang, 'update.available')}</span>
+                    <button onClick={() => window.location.reload()}>
+                        {t(lang, 'update.refresh')}
+                    </button>
+                </div>
+            )}
             <header style={{
                 display: 'flex',
                 justifyContent: 'space-between',

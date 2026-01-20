@@ -1,5 +1,7 @@
 // Service Worker for Fast PGN Typist
-const CACHE_NAME = 'pgn-typist-v1';
+// Change this version when deploying updates - forces cache refresh
+const CACHE_VERSION = '2';
+const CACHE_NAME = `pgn-typist-v${CACHE_VERSION}`;
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
@@ -14,45 +16,69 @@ self.addEventListener('install', (event) => {
       return cache.addAll(ASSETS_TO_CACHE);
     })
   );
-  // Activate immediately
+  // Activate immediately - don't wait for old SW to stop
   self.skipWaiting();
 });
 
-// Activate: Clean up old caches
+// Activate: Clean up old caches and notify clients
 self.addEventListener('activate', (event) => {
   event.waitUntil(
-    caches.keys().then((cacheNames) => {
-      return Promise.all(
+    (async () => {
+      // Clean up old caches
+      const cacheNames = await caches.keys();
+      await Promise.all(
         cacheNames
-          .filter((name) => name !== CACHE_NAME)
+          .filter((name) => name.startsWith('pgn-typist-') && name !== CACHE_NAME)
           .map((name) => caches.delete(name))
       );
-    })
+
+      // Take control of all pages immediately
+      await self.clients.claim();
+
+      // Notify all clients that an update is available
+      const clients = await self.clients.matchAll({ type: 'window' });
+      clients.forEach((client) => {
+        client.postMessage({ type: 'SW_UPDATED', version: CACHE_VERSION });
+      });
+    })()
   );
-  // Take control of all pages immediately
-  self.clients.claim();
 });
 
-// Fetch: Cache-first strategy (perfect for single-file app)
+// Fetch: Network-first for HTML, cache-first for assets
 self.addEventListener('fetch', (event) => {
+  const url = new URL(event.request.url);
+  
+  // For navigation requests (HTML pages), use network-first
+  if (event.request.mode === 'navigate' || 
+      event.request.destination === 'document' ||
+      url.pathname.endsWith('.html') ||
+      url.pathname === '/' ||
+      url.pathname.endsWith('/')) {
+    event.respondWith(
+      fetch(event.request)
+        .then((response) => {
+          // Cache the fresh response
+          if (response.ok) {
+            const responseClone = response.clone();
+            caches.open(CACHE_NAME).then((cache) => {
+              cache.put(event.request, responseClone);
+            });
+          }
+          return response;
+        })
+        .catch(async () => {
+          // Offline fallback - serve from cache
+          const cachedResponse = await caches.match(event.request);
+          return cachedResponse || caches.match('./index.html');
+        })
+    );
+    return;
+  }
+
+  // For other assets (JS, CSS, images), use stale-while-revalidate
   event.respondWith(
     caches.match(event.request).then((cachedResponse) => {
-      if (cachedResponse) {
-        // Return cached version, but also fetch fresh in background
-        event.waitUntil(
-          fetch(event.request).then((response) => {
-            if (response.ok) {
-              caches.open(CACHE_NAME).then((cache) => {
-                cache.put(event.request, response);
-              });
-            }
-          }).catch(() => {})
-        );
-        return cachedResponse;
-      }
-      // Not in cache, fetch from network
-      return fetch(event.request).then((response) => {
-        // Cache successful responses
+      const fetchPromise = fetch(event.request).then((response) => {
         if (response.ok) {
           const responseClone = response.clone();
           caches.open(CACHE_NAME).then((cache) => {
@@ -60,7 +86,16 @@ self.addEventListener('fetch', (event) => {
           });
         }
         return response;
-      });
+      }).catch(() => cachedResponse);
+
+      return cachedResponse || fetchPromise;
     })
   );
+});
+
+// Listen for skip waiting message from client
+self.addEventListener('message', (event) => {
+  if (event.data && event.data.type === 'SKIP_WAITING') {
+    self.skipWaiting();
+  }
 });
