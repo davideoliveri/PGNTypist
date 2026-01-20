@@ -288,7 +288,7 @@ function App() {
             {updateAvailable && (
                 <div className="update-banner">
                     <span>🔄 {t(lang, 'update.available')}</span>
-                    <button onClick={() => window.location.reload()}>
+                    <button onClick={() => (window as unknown as { activateNewSW?: () => void }).activateNewSW?.()}>
                         {t(lang, 'update.refresh')}
                     </button>
                 </div>

@@ -38,23 +38,33 @@
   <script>
     // Register service worker with update detection
     if ('serviceWorker' in navigator) {
+      // Store reference to waiting service worker
+      window.__waitingSW = null;
+
       window.addEventListener('load', () => {
         navigator.serviceWorker.register('./sw.js')
           .then(reg => {
             console.log('SW registered:', reg.scope);
-            
+
             // Check for updates periodically (every 5 minutes)
             setInterval(() => {
-              reg.update().catch(() => {});
+              reg.update().catch(() => { });
             }, 5 * 60 * 1000);
-            
+
+            // Check if there's already a waiting worker
+            if (reg.waiting) {
+              window.__waitingSW = reg.waiting;
+              window.dispatchEvent(new CustomEvent('sw-update-available'));
+            }
+
             // Listen for new service worker installing
             reg.addEventListener('updatefound', () => {
               const newWorker = reg.installing;
               if (newWorker) {
                 newWorker.addEventListener('statechange', () => {
                   if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                    // New version installed but waiting
+                    // New version installed but waiting - store reference
+                    window.__waitingSW = newWorker;
                     window.dispatchEvent(new CustomEvent('sw-update-available'));
                   }
                 });
@@ -62,23 +72,25 @@
             });
           })
           .catch(err => console.log('SW registration failed:', err));
-        
-        // Listen for messages from service worker
-        navigator.serviceWorker.addEventListener('message', (event) => {
-          if (event.data && event.data.type === 'SW_UPDATED') {
-            window.dispatchEvent(new CustomEvent('sw-update-available'));
-          }
-        });
-        
-        // Handle controller change (new SW took over)
+
+        // Handle controller change (new SW took over) - reload to get new content
         navigator.serviceWorker.addEventListener('controllerchange', () => {
-          // Only reload if we're not already reloading
           if (!window.__swReloading) {
             window.__swReloading = true;
             window.location.reload();
           }
         });
       });
+
+      // Function to activate the waiting service worker
+      window.activateNewSW = function () {
+        if (window.__waitingSW) {
+          window.__waitingSW.postMessage({ type: 'SKIP_WAITING' });
+        } else {
+          // Fallback: just reload
+          window.location.reload();
+        }
+      };
     }
   </script>
 </body>

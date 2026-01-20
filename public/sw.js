@@ -9,15 +9,14 @@ const ASSETS_TO_CACHE = [
   './manifest.json'
 ];
 
-// Install: Cache essential assets
+// Install: Cache essential assets (but don't activate yet - wait for user)
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
       return cache.addAll(ASSETS_TO_CACHE);
     })
   );
-  // Activate immediately - don't wait for old SW to stop
-  self.skipWaiting();
+  // Don't call skipWaiting() here - let the new SW wait until user clicks refresh
 });
 
 // Activate: Clean up old caches and notify clients
@@ -47,6 +46,11 @@ self.addEventListener('activate', (event) => {
 // Fetch: Network-first for HTML, cache-first for assets
 self.addEventListener('fetch', (event) => {
   const url = new URL(event.request.url);
+  
+  // Only handle http/https requests (skip chrome-extension://, etc.)
+  if (!url.protocol.startsWith('http')) {
+    return;
+  }
   
   // For navigation requests (HTML pages), use network-first
   if (event.request.mode === 'navigate' || 
