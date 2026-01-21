@@ -94,6 +94,7 @@ export const MoveInput = forwardRef<MoveInputHandle, MoveInputProps>(({ onMove, 
       <input
         ref={inputRef}
         type="text"
+        id="move-input"
         value={value}
         onChange={e => setValue(e.target.value)}
         onKeyDown={handleKeyDown}

@@ -16,9 +16,10 @@ interface WalkthroughStep {
 
 const WALKTHROUGH_STEPS: WalkthroughStep[] = [
     { id: 'welcome', position: 'center' },
-    { id: 'enterMoves', targetSelector: 'input[type="text"]', position: 'auto' },
+    { id: 'enterMoves', targetSelector: '#move-input', position: 'auto' },
     { id: 'navigation', targetSelector: '.move-list', position: 'auto' },
     { id: 'editing', targetSelector: '.move-list', position: 'auto' },
+    { id: 'comments', targetSelector: '#comment-input', position: 'auto' },
     { id: 'deleteMenu', targetSelector: '.move-list', position: 'auto' },
     { id: 'export', targetSelector: 'footer', position: 'auto' },
     { id: 'done', position: 'center' },

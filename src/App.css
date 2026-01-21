@@ -19,8 +19,8 @@
 .moves-column {
     display: flex;
     flex-direction: column;
-    height: 440px;
-    /* Match board (400px) + button (~40px) */
+    height: 484px;
+    /* Match board height exactly */
 }
 
 .move-list {
@@ -50,8 +50,7 @@
     }
 
     .moves-column {
-        height: 320px;
-        /* Fixed height on mobile */
+        min-height: 250px;
     }
 
     /* Metadata compact layout on mobile */
@@ -96,6 +95,7 @@
     from {
         transform: translateY(-100%);
     }
+
     to {
         transform: translateY(0);
     }

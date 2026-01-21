@@ -12,11 +12,13 @@ import './App.css';
 const WALKTHROUGH_KEY = 'pgn-typist-walkthrough-done';
 const MOVES_STORAGE_KEY = 'pgn-typist-moves';
 const HEADERS_STORAGE_KEY = 'pgn-typist-headers';
+const COMMENTS_STORAGE_KEY = 'pgn-typist-comments';
 
 const DEFAULT_HEADERS: { [key: string]: string } = {
     'Event': '??',
-    'Date': new Date().toISOString().split('T')[0].replace(/-/g, '.'),
     'Site': '??',
+    'Date': new Date().toISOString().split('T')[0].replace(/-/g, '.'),
+    'Round': '??',
     'White': '??',
     'Black': '??',
     'Result': '*'
@@ -50,6 +52,29 @@ const getInitialHeaders = (): { [key: string]: string } => {
         // Ignore parse errors
     }
     return { ...DEFAULT_HEADERS };
+};
+
+// Load comments from localStorage
+const getInitialComments = (): Record<number, string> => {
+    try {
+        const stored = localStorage.getItem(COMMENTS_STORAGE_KEY);
+        if (stored) {
+            const parsed = JSON.parse(stored);
+            if (typeof parsed === 'object' && parsed !== null) {
+                // Convert string keys back to numbers
+                const comments: Record<number, string> = {};
+                for (const [key, value] of Object.entries(parsed)) {
+                    if (typeof value === 'string') {
+                        comments[Number(key)] = value;
+                    }
+                }
+                return comments;
+            }
+        }
+    } catch (e) {
+        // Ignore parse errors
+    }
+    return {};
 };
 
 function App() {
@@ -144,12 +169,16 @@ function App() {
 
     const {
         moveList,
+        comments,
         selectedIndex,
         setCursor,
         addMove,
         truncateFromIndex,
         deleteLast,
         clearAll,
+        setComment,
+        deleteComment,
+        clearAllComments,
         undo,
         redo,
         canUndo,
@@ -158,7 +187,7 @@ function App() {
         result,
         isGameOver,
         fen
-    } = useChessGame(getInitialMoves());
+    } = useChessGame(getInitialMoves(), getInitialComments());
 
     // Persist moves to localStorage
     useEffect(() => {
@@ -169,6 +198,11 @@ function App() {
     useEffect(() => {
         localStorage.setItem(HEADERS_STORAGE_KEY, JSON.stringify(headers));
     }, [headers]);
+
+    // Persist comments to localStorage
+    useEffect(() => {
+        localStorage.setItem(COMMENTS_STORAGE_KEY, JSON.stringify(comments));
+    }, [comments]);
 
     // Update Result in headers if game over
     useEffect(() => {
@@ -209,15 +243,18 @@ function App() {
             // Prevent double handling if a child component already handled it (e.g. MoveInput)
             if (e.defaultPrevented) return;
 
+            // Skip navigation if user is in comment input - let them use Cmd+arrows normally
+            const isCommentInput = target.id === 'comment-input';
+
             if (e.key === 'ArrowLeft') {
-                if (!isInput || isCmd) {
+                if (!isInput || (isCmd && !isCommentInput)) {
                     e.preventDefault();
                     navigate(-1);
                 }
             }
 
             if (e.key === 'ArrowRight') {
-                if (!isInput || isCmd) {
+                if (!isInput || (isCmd && !isCommentInput)) {
                     e.preventDefault();
                     navigate(1);
                 }
@@ -241,7 +278,7 @@ function App() {
         });
     }; // Added moveList dependency for navigation logic
 
-    const handleExport = (type: 'copy' | 'download') => {
+    const handleExport = (type: 'copy' | 'download', withComments: boolean = false) => {
         let pgn = '';
         // Headers
         for (const [key, value] of Object.entries(headers)) {
@@ -249,12 +286,21 @@ function App() {
         }
         pgn += '\n';
 
-        // Moves
+        // Moves with optional comments
         let moveText = '';
-        for (let i = 0; i < moveList.length; i += 2) {
-            moveText += `${Math.floor(i / 2) + 1}. ${moveList[i]} `;
-            if (moveList[i + 1]) {
-                moveText += `${moveList[i + 1]} `;
+        for (let i = 0; i < moveList.length; i++) {
+            const isWhite = i % 2 === 0;
+            const moveNumber = Math.floor(i / 2) + 1;
+
+            if (isWhite) {
+                moveText += `${moveNumber}. `;
+            }
+
+            moveText += `${moveList[i]} `;
+
+            // Add comment if enabled and exists
+            if (withComments && comments[i]) {
+                moveText += `{${comments[i]}} `;
             }
         }
         pgn += moveText + (headers['Result'] || result);
@@ -345,9 +391,11 @@ function App() {
                     <div className="moves-column">
                         <MoveList
                             moves={moveList}
+                            comments={comments}
                             selectedIndex={selectedIndex}
                             onSelect={setCursor}
                             onDeleteFrom={truncateFromIndex}
+                            onDeleteComment={deleteComment}
                             lang={lang}
                         />
                         {/* Delete buttons - always visible, centered */}
@@ -355,7 +403,8 @@ function App() {
                             display: 'flex',
                             gap: '8px',
                             marginTop: '8px',
-                            justifyContent: 'center'
+                            justifyContent: 'center',
+                            flexWrap: 'wrap'
                         }}>
                             <button
                                 onClick={deleteLast}
@@ -389,6 +438,63 @@ function App() {
                             >
                                 {t(lang, 'moves.clearAll')}
                             </button>
+                            <button
+                                onClick={clearAllComments}
+                                disabled={Object.keys(comments).length === 0}
+                                style={{
+                                    padding: '6px 12px',
+                                    background: 'transparent',
+                                    border: '1px solid #557',
+                                    borderRadius: '4px',
+                                    color: Object.keys(comments).length === 0 ? '#445' : '#88a',
+                                    cursor: Object.keys(comments).length === 0 ? 'default' : 'pointer',
+                                    fontSize: '1em',
+                                    opacity: Object.keys(comments).length === 0 ? 0.5 : 1
+                                }}
+                            >
+                                {t(lang, 'moves.clearComments')}
+                            </button>
+                        </div>
+                        {/* Comment input - always visible, disabled when no move selected */}
+                        <div style={{ marginTop: '8px' }}>
+                            <input
+                                id="comment-input"
+                                type="text"
+                                value={selectedIndex !== null ? (comments[selectedIndex] || '') : ''}
+                                onChange={(e) => {
+                                    if (selectedIndex !== null) {
+                                        setComment(selectedIndex, e.target.value);
+                                    }
+                                }}
+                                onKeyDown={(e) => {
+                                    // Allow Cmd/Ctrl + arrow keys for normal text navigation
+                                    if ((e.metaKey || e.ctrlKey) && (e.key === 'ArrowLeft' || e.key === 'ArrowRight')) {
+                                        return; // Let the browser handle it
+                                    }
+                                    if (e.key === 'Enter') {
+                                        e.preventDefault();
+                                        // Deselect move so next input goes to end of list
+                                        setCursor(null);
+                                        // Focus on move input to continue adding moves
+                                        moveInputRef.current?.focus();
+                                    }
+                                }}
+                                disabled={selectedIndex === null}
+                                placeholder={selectedIndex !== null
+                                    ? t(lang, 'comment.placeholder').replace('{0}', String(Math.floor(selectedIndex / 2) + 1))
+                                    : t(lang, 'comment.disabled')
+                                }
+                                style={{
+                                    width: '100%',
+                                    padding: '8px 12px',
+                                    borderRadius: '4px',
+                                    border: '1px solid #555',
+                                    background: selectedIndex === null ? '#1a1a1a' : '#2a2a2a',
+                                    color: selectedIndex === null ? '#555' : '#ccc',
+                                    fontSize: '0.9em',
+                                    boxSizing: 'border-box'
+                                }}
+                            />
                         </div>
                     </div>
                     {!isMobile && (
@@ -442,20 +548,24 @@ function App() {
                         onChange={setHeaders}
                         onResetValues={() => {
                             // Reset all values to "??" but keep keys (including custom ones)
+                            // Result is special - reset to "*" instead of "??"
                             const resetHeaders: { [key: string]: string } = {};
                             for (const key of Object.keys(headers)) {
-                                resetHeaders[key] = '??';
+                                resetHeaders[key] = key === 'Result' ? '*' : '??';
                             }
                             setHeaders(resetHeaders);
                         }}
                         lang={lang}
                     />
                 </div>
-                <div style={{ display: 'flex', gap: '10px', justifyContent: 'center' }}>
-                    <button onClick={() => handleExport('copy')}>
+                <div style={{ display: 'flex', gap: '10px', justifyContent: 'center', flexWrap: 'wrap' }}>
+                    <button onClick={() => handleExport('copy', false)}>
                         {t(lang, 'export.copy')}
                     </button>
-                    <button onClick={() => handleExport('download')}>
+                    <button onClick={() => handleExport('copy', true)}>
+                        {t(lang, 'export.copyWithComments')}
+                    </button>
+                    <button onClick={() => handleExport('download', true)}>
                         {t(lang, 'export.download')}
                     </button>
                 </div>

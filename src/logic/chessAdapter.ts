@@ -13,41 +13,54 @@ export interface GameState {
   history: { ply: number; move: Move }[]; // Detailed history from chess.js
 }
 
-export function useChessGame(initialMoves: string[] = []) {
+// Type for history state (moves + comments together for undo/redo)
+interface HistoryState {
+  moves: string[];
+  comments: Record<number, string>;
+}
+
+export function useChessGame(initialMoves: string[] = [], initialComments: Record<number, string> = {}) {
   // The source of truth is the array of moves (English SAN).
   const [moves, setMoves] = useState<string[]>(initialMoves);
-  // History for Undo/Redo (of the moves array itself)
-  const [historyStack, setHistoryStack] = useState<string[][]>([]);
-  const [redoStack, setRedoStack] = useState<string[][]>([]);
+  // Comments keyed by move index (half-ply)
+  const [comments, setComments] = useState<Record<number, string>>(initialComments);
+  // History for Undo/Redo (of the moves + comments together)
+  const [historyStack, setHistoryStack] = useState<HistoryState[]>([]);
+  const [redoStack, setRedoStack] = useState<HistoryState[]>([]);
 
   // Selection/Focus state
   // If null, we are at the end of the game (appending).
   // If number, we are focusing on that index in the moves array (to edit it).
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
 
-  const pushHistory = (newMoves: string[]) => {
-    setHistoryStack((prev) => [...prev, moves]);
+  const pushHistory = (newMoves: string[], newComments?: Record<number, string>) => {
+    setHistoryStack((prev) => [...prev, { moves, comments }]);
     setRedoStack([]);
     setMoves(newMoves);
+    if (newComments !== undefined) {
+      setComments(newComments);
+    }
   };
 
   const undo = useCallback(() => {
     if (historyStack.length === 0) return;
     const prev = historyStack[historyStack.length - 1];
-    setRedoStack((r) => [moves, ...r]);
+    setRedoStack((r) => [{ moves, comments }, ...r]);
     setHistoryStack((h) => h.slice(0, -1));
-    setMoves(prev);
+    setMoves(prev.moves);
+    setComments(prev.comments);
     setSelectedIndex(null); // Reset selection on undo
-  }, [historyStack, moves]);
+  }, [historyStack, moves, comments]);
 
   const redo = useCallback(() => {
     if (redoStack.length === 0) return;
     const next = redoStack[0];
-    setHistoryStack((h) => [...h, moves]);
+    setHistoryStack((h) => [...h, { moves, comments }]);
     setRedoStack((r) => r.slice(1));
-    setMoves(next);
+    setMoves(next.moves);
+    setComments(next.comments);
     setSelectedIndex(null);
-  }, [redoStack, moves]);
+  }, [redoStack, moves, comments]);
 
   // Derived state: Replay the game
   // Let's compute the FULL game state first.
@@ -147,31 +160,68 @@ export function useChessGame(initialMoves: string[] = []) {
     return moves.map(m => toLocalizedSAN(m, lang));
   };
 
-
+  // Helper to filter out comments for indices >= threshold
+  const filterOrphanedComments = (threshold: number): Record<number, string> => {
+    const filtered: Record<number, string> = {};
+    for (const [key, value] of Object.entries(comments)) {
+      const idx = Number(key);
+      if (idx < threshold) {
+        filtered[idx] = value;
+      }
+    }
+    return filtered;
+  };
 
   const truncateFromIndex = useCallback((index: number) => {
     if (index < 0 || index >= moves.length) return;
     const newMoves = moves.slice(0, index);
-    pushHistory(newMoves);
+    const newComments = filterOrphanedComments(index);
+    pushHistory(newMoves, newComments);
     setSelectedIndex(null);
-  }, [moves]);
+  }, [moves, comments]);
 
   const deleteLast = useCallback(() => {
     if (moves.length === 0) return;
     const newMoves = moves.slice(0, -1);
-    pushHistory(newMoves);
+    const newComments = filterOrphanedComments(moves.length - 1);
+    pushHistory(newMoves, newComments);
     setSelectedIndex(null);
-  }, [moves]);
+  }, [moves, comments]);
 
   const clearAll = useCallback(() => {
-    if (moves.length === 0) return;
-    pushHistory([]);
+    if (moves.length === 0 && Object.keys(comments).length === 0) return;
+    pushHistory([], {});
     setSelectedIndex(null);
-  }, [moves]);
+  }, [moves, comments]);
+
+  // Comment management functions
+  const setComment = useCallback((index: number, comment: string) => {
+    if (index < 0 || index >= moves.length) return;
+    const newComments = { ...comments };
+    if (comment.trim() === '') {
+      delete newComments[index];
+    } else {
+      newComments[index] = comment;
+    }
+    pushHistory(moves, newComments);
+  }, [moves, comments]);
+
+  const deleteComment = useCallback((index: number) => {
+    if (comments[index] === undefined) return;
+    const newComments = { ...comments };
+    delete newComments[index];
+    pushHistory(moves, newComments);
+  }, [moves, comments]);
+
+  const clearAllComments = useCallback(() => {
+    if (Object.keys(comments).length === 0) return;
+    pushHistory(moves, {});
+  }, [moves, comments]);
 
   // Load moves without affecting undo history (for initial load from localStorage)
-  const loadMoves = useCallback((newMoves: string[]) => {
+  const loadMoves = useCallback((newMoves: string[], newComments: Record<number, string> = {}) => {
     setMoves(newMoves);
+    setComments(newComments);
     setHistoryStack([]);
     setRedoStack([]);
     setSelectedIndex(null);
@@ -180,12 +230,16 @@ export function useChessGame(initialMoves: string[] = []) {
   return {
     fen: cursorGame.fen(),
     moveList: moves, // The source of truth
+    comments, // Comments keyed by move index
     selectedIndex,
     setCursor,
     addMove,
     truncateFromIndex,
     deleteLast,
     clearAll,
+    setComment,
+    deleteComment,
+    clearAllComments,
     loadMoves,
     undo,
     redo,
