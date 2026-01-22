@@ -13,6 +13,8 @@ const WALKTHROUGH_KEY = 'pgn-typist-walkthrough-done';
 const MOVES_STORAGE_KEY = 'pgn-typist-moves';
 const HEADERS_STORAGE_KEY = 'pgn-typist-headers';
 const COMMENTS_STORAGE_KEY = 'pgn-typist-comments';
+const SHOW_LAST_MOVE_KEY = 'pgn-typist-show-last-move';
+const SHOW_SELECTED_MOVE_KEY = 'pgn-typist-show-selected-move';
 
 const DEFAULT_HEADERS: { [key: string]: string } = {
     'Event': '??',
@@ -107,15 +109,24 @@ function App() {
     const [showHelp, setShowHelp] = useState(false);
     const [showWalkthrough, setShowWalkthrough] = useState(false);
     const [boardOrientation, setBoardOrientation] = useState<'white' | 'black'>('white');
-    const [updateAvailable, setUpdateAvailable] = useState(false);
+    const [showLastMoveHighlight, setShowLastMoveHighlight] = useState(() => {
+        const stored = localStorage.getItem(SHOW_LAST_MOVE_KEY);
+        return stored === null ? true : stored === 'true';
+    });
+    const [showSelectedMoveHighlight, setShowSelectedMoveHighlight] = useState(() => {
+        const stored = localStorage.getItem(SHOW_SELECTED_MOVE_KEY);
+        return stored === null ? true : stored === 'true';
+    });
     const moveInputRef = useRef<MoveInputHandle>(null);
 
-    // Listen for service worker updates
+    // Persist highlight preferences
     useEffect(() => {
-        const handleUpdate = () => setUpdateAvailable(true);
-        window.addEventListener('sw-update-available', handleUpdate);
-        return () => window.removeEventListener('sw-update-available', handleUpdate);
-    }, []);
+        localStorage.setItem(SHOW_LAST_MOVE_KEY, String(showLastMoveHighlight));
+    }, [showLastMoveHighlight]);
+
+    useEffect(() => {
+        localStorage.setItem(SHOW_SELECTED_MOVE_KEY, String(showSelectedMoveHighlight));
+    }, [showSelectedMoveHighlight]);
 
     // Check if first-time user for walkthrough
     useEffect(() => {
@@ -171,6 +182,8 @@ function App() {
         moveList,
         comments,
         selectedIndex,
+        lastMoveSquares,
+        selectedMoveSquares,
         setCursor,
         addMove,
         truncateFromIndex,
@@ -330,15 +343,7 @@ function App() {
             boxSizing: 'border-box',
             gap: '20px'
         }}>
-            {/* Update Available Banner */}
-            {updateAvailable && (
-                <div className="update-banner">
-                    <span>🔄 {t(lang, 'update.available')}</span>
-                    <button onClick={() => (window as unknown as { activateNewSW?: () => void }).activateNewSW?.()}>
-                        {t(lang, 'update.refresh')}
-                    </button>
-                </div>
-            )}
+
             <header style={{
                 display: 'flex',
                 justifyContent: 'space-between',
@@ -499,26 +504,53 @@ function App() {
                     </div>
                     {!isMobile && (
                         <div className="board-column">
-                            <MiniBoard fen={fen} orientation={boardOrientation} />
-                            {/* Flip button - centered under board */}
-                            <button
-                                onClick={() => setBoardOrientation(o => o === 'white' ? 'black' : 'white')}
-                                style={{
-                                    marginTop: '8px',
-                                    padding: '6px 12px',
-                                    background: 'transparent',
-                                    border: '1px solid #555',
-                                    borderRadius: '4px',
-                                    color: '#888',
-                                    cursor: 'pointer',
-                                    fontSize: '1em',
-                                    display: 'block',
-                                    marginLeft: 'auto',
-                                    marginRight: 'auto'
-                                }}
-                            >
-                                ⟳ {t(lang, 'board.flip')}
-                            </button>
+                            <MiniBoard
+                                fen={fen}
+                                orientation={boardOrientation}
+                                lastMoveSquares={showLastMoveHighlight ? lastMoveSquares : null}
+                                selectedMoveSquares={showSelectedMoveHighlight ? selectedMoveSquares : null}
+                            />
+                            {/* Board controls */}
+                            <div style={{
+                                marginTop: '8px',
+                                display: 'flex',
+                                flexDirection: 'column',
+                                alignItems: 'center',
+                                gap: '6px'
+                            }}>
+                                <button
+                                    onClick={() => setBoardOrientation(o => o === 'white' ? 'black' : 'white')}
+                                    style={{
+                                        padding: '6px 12px',
+                                        background: 'transparent',
+                                        border: '1px solid #555',
+                                        borderRadius: '4px',
+                                        color: '#888',
+                                        cursor: 'pointer',
+                                        fontSize: '1em'
+                                    }}
+                                >
+                                    ⟳ {t(lang, 'board.flip')}
+                                </button>
+                                <div style={{ display: 'flex', gap: '12px', fontSize: '0.8em', color: '#888' }}>
+                                    <label style={{ display: 'flex', alignItems: 'center', gap: '4px', cursor: 'pointer' }}>
+                                        <input
+                                            type="checkbox"
+                                            checked={showLastMoveHighlight}
+                                            onChange={(e) => setShowLastMoveHighlight(e.target.checked)}
+                                        />
+                                        {t(lang, 'board.showLastMove')}
+                                    </label>
+                                    <label style={{ display: 'flex', alignItems: 'center', gap: '4px', cursor: 'pointer' }}>
+                                        <input
+                                            type="checkbox"
+                                            checked={showSelectedMoveHighlight}
+                                            onChange={(e) => setShowSelectedMoveHighlight(e.target.checked)}
+                                        />
+                                        {t(lang, 'board.showSelectedMove')}
+                                    </label>
+                                </div>
+                            </div>
                         </div>
                     )}
                 </div>

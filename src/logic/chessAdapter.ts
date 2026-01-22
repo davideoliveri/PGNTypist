@@ -94,6 +94,52 @@ export function useChessGame(initialMoves: string[] = [], initialComments: Recor
     return chess;
   }, [moves, selectedIndex]);
 
+  // Compute the last move's source and destination squares for highlighting
+  // Shows the move before the cursor (or last move if cursor is at end)
+  const lastMoveSquares = useMemo((): { from: string; to: string } | null => {
+    const limit = selectedIndex === null ? moves.length : selectedIndex;
+    if (limit === 0) return null; // No moves to show
+
+    // Replay to the move just before cursor
+    const chess = new Chess();
+    let lastMove: Move | null = null;
+    for (let i = 0; i < limit; i++) {
+      try {
+        lastMove = chess.move(moves[i]);
+      } catch (e) { break; }
+    }
+
+    if (lastMove) {
+      return { from: lastMove.from, to: lastMove.to };
+    }
+    return null;
+  }, [moves, selectedIndex]);
+
+  // Compute the selected move's source and destination squares for outline highlighting
+  // This shows the move that is currently selected (what will happen next from the displayed position)
+  const selectedMoveSquares = useMemo((): { from: string; to: string } | null => {
+    if (selectedIndex === null) return null; // No move selected
+    if (selectedIndex >= moves.length) return null; // Invalid index
+
+    // Replay up to (but not including) the selected move to get the position
+    const chess = new Chess();
+    for (let i = 0; i < selectedIndex; i++) {
+      try {
+        chess.move(moves[i]);
+      } catch (e) { break; }
+    }
+
+    // Now play the selected move to get its from/to squares
+    try {
+      const selectedMove = chess.move(moves[selectedIndex]);
+      if (selectedMove) {
+        return { from: selectedMove.from, to: selectedMove.to };
+      }
+    } catch (e) { /* Invalid move */ }
+
+    return null;
+  }, [moves, selectedIndex]);
+
   const addMove = useCallback((san: string) => {
     // 1. Validate against cursorGame
     try {
@@ -232,6 +278,8 @@ export function useChessGame(initialMoves: string[] = [], initialComments: Recor
     moveList: moves, // The source of truth
     comments, // Comments keyed by move index
     selectedIndex,
+    lastMoveSquares, // Source and destination squares for highlighting
+    selectedMoveSquares, // Source and destination squares for the selected move (outline)
     setCursor,
     addMove,
     truncateFromIndex,
