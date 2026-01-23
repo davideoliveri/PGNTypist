@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { Copy, Download, MessageSquare, FileDown } from 'lucide-react';
 import { useChessGame } from './logic/chessAdapter';
 import { type Language, SUPPORTED_LANGUAGES, t } from './logic/localization';
 import { MoveList } from './components/MoveList';
@@ -530,25 +531,39 @@ function App() {
                                         fontSize: '1em'
                                     }}
                                 >
-                                    ⟳ {t(lang, 'board.flip')}
+                                    {t(lang, 'board.flip')}
                                 </button>
-                                <div style={{ display: 'flex', gap: '12px', fontSize: '0.8em', color: '#888' }}>
-                                    <label style={{ display: 'flex', alignItems: 'center', gap: '4px', cursor: 'pointer' }}>
-                                        <input
-                                            type="checkbox"
-                                            checked={showLastMoveHighlight}
-                                            onChange={(e) => setShowLastMoveHighlight(e.target.checked)}
-                                        />
+                                <div style={{ display: 'flex', gap: '6px', fontSize: '0.85em' }}>
+                                    <button
+                                        onClick={() => setShowLastMoveHighlight(!showLastMoveHighlight)}
+                                        style={{
+                                            padding: '6px 12px',
+                                            background: showLastMoveHighlight ? 'rgba(74, 144, 226, 0.2)' : 'transparent',
+                                            border: showLastMoveHighlight ? '1px solid #4a90e2' : '1px solid #555',
+                                            borderRadius: '4px',
+                                            color: showLastMoveHighlight ? '#4a90e2' : '#888',
+                                            cursor: 'pointer',
+                                            fontSize: '1em',
+                                            transition: 'all 0.2s ease'
+                                        }}
+                                    >
                                         {t(lang, 'board.showLastMove')}
-                                    </label>
-                                    <label style={{ display: 'flex', alignItems: 'center', gap: '4px', cursor: 'pointer' }}>
-                                        <input
-                                            type="checkbox"
-                                            checked={showSelectedMoveHighlight}
-                                            onChange={(e) => setShowSelectedMoveHighlight(e.target.checked)}
-                                        />
+                                    </button>
+                                    <button
+                                        onClick={() => setShowSelectedMoveHighlight(!showSelectedMoveHighlight)}
+                                        style={{
+                                            padding: '6px 12px',
+                                            background: showSelectedMoveHighlight ? 'rgba(74, 144, 226, 0.2)' : 'transparent',
+                                            border: showSelectedMoveHighlight ? '1px solid #4a90e2' : '1px solid #555',
+                                            borderRadius: '4px',
+                                            color: showSelectedMoveHighlight ? '#4a90e2' : '#888',
+                                            cursor: 'pointer',
+                                            fontSize: '1em',
+                                            transition: 'all 0.2s ease'
+                                        }}
+                                    >
                                         {t(lang, 'board.showSelectedMove')}
-                                    </label>
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -590,16 +605,52 @@ function App() {
                         lang={lang}
                     />
                 </div>
-                <div style={{ display: 'flex', gap: '10px', justifyContent: 'center', flexWrap: 'wrap' }}>
-                    <button onClick={() => handleExport('copy', false)}>
-                        {t(lang, 'export.copy')}
-                    </button>
-                    <button onClick={() => handleExport('copy', true)}>
-                        {t(lang, 'export.copyWithComments')}
-                    </button>
-                    <button onClick={() => handleExport('download', true)}>
-                        {t(lang, 'export.download')}
-                    </button>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', alignItems: 'center' }}>
+                    {/* Copy Buttons Group */}
+                    <div style={{ display: 'flex', gap: '10px', justifyContent: 'center', flexWrap: 'wrap' }}>
+                        <button
+                            onClick={() => handleExport('copy', false)}
+                            style={{ display: 'flex', alignItems: 'center', gap: '6px' }}
+                        >
+                            <Copy size={16} />
+                            {t(lang, 'export.copy')}
+                        </button>
+                        <button
+                            onClick={() => handleExport('copy', true)}
+                            disabled={Object.keys(comments).length === 0}
+                            style={{
+                                opacity: Object.keys(comments).length === 0 ? 0.5 : 1,
+                                cursor: Object.keys(comments).length === 0 ? 'not-allowed' : 'pointer',
+                                display: 'flex', alignItems: 'center', gap: '6px'
+                            }}
+                        >
+                            <MessageSquare size={16} />
+                            {t(lang, 'export.copyWithComments')}
+                        </button>
+                    </div>
+
+                    {/* Download Buttons Group */}
+                    <div style={{ display: 'flex', gap: '10px', justifyContent: 'center', flexWrap: 'wrap' }}>
+                        <button
+                            onClick={() => handleExport('download', false)}
+                            style={{ display: 'flex', alignItems: 'center', gap: '6px' }}
+                        >
+                            <FileDown size={16} />
+                            {t(lang, 'export.downloadMoves')}
+                        </button>
+                        <button
+                            onClick={() => handleExport('download', true)}
+                            disabled={Object.keys(comments).length === 0}
+                            style={{
+                                opacity: Object.keys(comments).length === 0 ? 0.5 : 1,
+                                cursor: Object.keys(comments).length === 0 ? 'not-allowed' : 'pointer',
+                                display: 'flex', alignItems: 'center', gap: '6px'
+                            }}
+                        >
+                            <Download size={16} />
+                            {t(lang, 'export.download')}
+                        </button>
+                    </div>
                 </div>
 
                 {/* SAN Note */}
