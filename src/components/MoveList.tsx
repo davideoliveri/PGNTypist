@@ -8,6 +8,7 @@ interface MoveListProps {
   onSelect: (index: number | null) => void;
   onDeleteFrom?: (index: number) => void;
   onDeleteComment?: (index: number) => void;
+  onFocusMoveInput?: () => void;
   lang: Language;
 }
 
@@ -25,6 +26,7 @@ export const MoveList: React.FC<MoveListProps> = ({
   onSelect,
   onDeleteFrom,
   onDeleteComment,
+  onFocusMoveInput,
   lang
 }) => {
   const listRef = useRef<HTMLDivElement>(null);
@@ -203,6 +205,7 @@ export const MoveList: React.FC<MoveListProps> = ({
                   isHighlighted={longPressIndex === row.white.index}
                   onClick={onSelect}
                   onContextMenu={handleContextMenu}
+                  onFocusMoveInput={onFocusMoveInput}
                 />
               ) : (
                 /* ".." placeholder for white column when black-only row */
@@ -218,6 +221,7 @@ export const MoveList: React.FC<MoveListProps> = ({
                   isHighlighted={longPressIndex === row.black.index}
                   onClick={onSelect}
                   onContextMenu={handleContextMenu}
+                  onFocusMoveInput={onFocusMoveInput}
                 />
               ) : (
                 /* ".." placeholder for black column when white-only row */
@@ -299,8 +303,9 @@ const MoveItem: React.FC<{
   isSelected: boolean,
   isHighlighted: boolean,
   onClick: (i: number | null) => void,
-  onContextMenu: (e: React.MouseEvent, index: number) => void
-}> = ({ index, san, lang, isSelected, isHighlighted, onClick, onContextMenu }) => {
+  onContextMenu: (e: React.MouseEvent, index: number) => void,
+  onFocusMoveInput?: () => void
+}> = ({ index, san, lang, isSelected, isHighlighted, onClick, onContextMenu, onFocusMoveInput }) => {
   const longPressTimer = useRef<number | null>(null);
   const [isLongPress, setIsLongPress] = useState(false);
 
@@ -329,8 +334,13 @@ const MoveItem: React.FC<{
 
   const handleClick = () => {
     if (!isLongPress) {
-      // Toggle: if already selected, deselect (null), otherwise select this index
-      onClick(isSelected ? null : index);
+      // If deselecting (clicking on already selected move), focus the move input
+      if (isSelected) {
+        onClick(null);
+        onFocusMoveInput?.();
+      } else {
+        onClick(index);
+      }
     }
     setIsLongPress(false);
   };

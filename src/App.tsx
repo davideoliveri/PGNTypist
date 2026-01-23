@@ -286,7 +286,11 @@ function App() {
                 return Math.max(0, prev - 1);
             } else {
                 if (prev === null) return null;
-                if (prev >= moveList.length - 1) return null; // Go to append
+                if (prev >= moveList.length - 1) {
+                    // Deselecting the last move - focus the move input
+                    setTimeout(() => moveInputRef.current?.focus(), 0);
+                    return null; // Go to append
+                }
                 return prev + 1;
             }
         });
@@ -402,6 +406,7 @@ function App() {
                             onSelect={setCursor}
                             onDeleteFrom={truncateFromIndex}
                             onDeleteComment={deleteComment}
+                            onFocusMoveInput={() => moveInputRef.current?.focus()}
                             lang={lang}
                         />
                         {/* Delete buttons - always visible, centered */}
