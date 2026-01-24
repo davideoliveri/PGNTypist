@@ -338,54 +338,26 @@ function App() {
     };
 
     return (
-        <div style={{
-            maxWidth: '900px',
-            margin: '0 auto',
-            padding: '20px',
-            display: 'flex',
-            flexDirection: 'column',
-            height: '100vh',
-            boxSizing: 'border-box',
-            gap: '20px'
-        }}>
+        <div className="app-container">
 
-            <header style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-            }}>
-                <h1 className="title-logo" style={{ margin: 0 }}>
-                    <img src="logo.svg" alt="Logo" style={{ width: '30px', height: '30px', marginRight: '10px' }} />
+            <header className="app-header">
+                <h1 className="title-logo">
+                    <img src="logo.svg" alt="Logo" />
                     <span>PGN Typist</span>
                 </h1>
-                <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+                <div className="header-controls">
                     <button
                         onClick={() => setShowHelp(true)}
-                        style={{
-                            background: 'transparent',
-                            border: '1px solid #555',
-                            color: '#888',
-                            width: '28px',
-                            height: '28px',
-                            minWidth: '28px',
-                            minHeight: '28px',
-                            padding: 0,
-                            borderRadius: '50%',
-                            cursor: 'pointer',
-                            fontSize: '0.9em',
-                            fontWeight: 500,
-                            lineHeight: 1
-                        }}
+                        className="help-btn"
                         aria-label={t(lang, 'help.title')}
                     >
                         ?
                     </button>
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', alignItems: 'center' }}>
-
+                    <div className="language-select-wrapper">
                         <select
                             value={lang}
                             onChange={(e) => setLang(e.target.value as Language)}
-                            style={{ padding: '4px', borderRadius: '4px', background: '#333', color: '#fff', border: '1px solid #555' }}
+                            className="language-select"
                         >
                             {Object.entries(SUPPORTED_LANGUAGES).map(([code, label]) => (
                                 <option key={code} value={code}>{label}</option>
@@ -410,67 +382,35 @@ function App() {
                             lang={lang}
                         />
                         {/* Delete buttons - always visible, centered */}
-                        <div style={{
-                            display: 'flex',
-                            gap: '8px',
-                            marginTop: '8px',
-                            justifyContent: 'center',
-                            flexWrap: 'wrap'
-                        }}>
+                        <div className="delete-buttons">
                             <button
                                 onClick={deleteLast}
                                 disabled={moveList.length === 0}
-                                style={{
-                                    padding: '6px 12px',
-                                    background: 'transparent',
-                                    border: '1px solid #555',
-                                    borderRadius: '4px',
-                                    color: moveList.length === 0 ? '#444' : '#888',
-                                    cursor: moveList.length === 0 ? 'default' : 'pointer',
-                                    fontSize: '1em',
-                                    opacity: moveList.length === 0 ? 0.5 : 1
-                                }}
+                                className="delete-btn"
                             >
                                 {t(lang, 'moves.deleteLast')}
                             </button>
                             <button
                                 onClick={clearAll}
                                 disabled={moveList.length === 0}
-                                style={{
-                                    padding: '6px 12px',
-                                    background: 'transparent',
-                                    border: '1px solid #733',
-                                    borderRadius: '4px',
-                                    color: moveList.length === 0 ? '#533' : '#a66',
-                                    cursor: moveList.length === 0 ? 'default' : 'pointer',
-                                    fontSize: '1em',
-                                    opacity: moveList.length === 0 ? 0.5 : 1
-                                }}
+                                className="delete-btn delete-btn--danger"
                             >
                                 {t(lang, 'moves.clearAll')}
                             </button>
                             <button
                                 onClick={clearAllComments}
                                 disabled={Object.keys(comments).length === 0}
-                                style={{
-                                    padding: '6px 12px',
-                                    background: 'transparent',
-                                    border: '1px solid #557',
-                                    borderRadius: '4px',
-                                    color: Object.keys(comments).length === 0 ? '#445' : '#88a',
-                                    cursor: Object.keys(comments).length === 0 ? 'default' : 'pointer',
-                                    fontSize: '1em',
-                                    opacity: Object.keys(comments).length === 0 ? 0.5 : 1
-                                }}
+                                className="delete-btn delete-btn--info"
                             >
                                 {t(lang, 'moves.clearComments')}
                             </button>
                         </div>
                         {/* Comment input - always visible, disabled when no move selected */}
-                        <div style={{ marginTop: '8px' }}>
+                        <div className="comment-input-wrapper">
                             <input
                                 id="comment-input"
                                 type="text"
+                                className="comment-input"
                                 value={selectedIndex !== null ? (comments[selectedIndex] || '') : ''}
                                 onChange={(e) => {
                                     if (selectedIndex !== null) {
@@ -484,9 +424,7 @@ function App() {
                                     }
                                     if (e.key === 'Enter') {
                                         e.preventDefault();
-                                        // Deselect move so next input goes to end of list
                                         setCursor(null);
-                                        // Focus on move input to continue adding moves
                                         moveInputRef.current?.focus();
                                     }
                                 }}
@@ -495,16 +433,6 @@ function App() {
                                     ? t(lang, 'comment.placeholder').replace('{0}', String(Math.floor(selectedIndex / 2) + 1))
                                     : t(lang, 'comment.disabled')
                                 }
-                                style={{
-                                    width: '100%',
-                                    padding: '8px 12px',
-                                    borderRadius: '4px',
-                                    border: '1px solid #555',
-                                    background: selectedIndex === null ? '#1a1a1a' : '#2a2a2a',
-                                    color: selectedIndex === null ? '#555' : '#ccc',
-                                    fontSize: '0.9em',
-                                    boxSizing: 'border-box'
-                                }}
                             />
                         </div>
                     </div>
@@ -517,55 +445,23 @@ function App() {
                                 selectedMoveSquares={showSelectedMoveHighlight ? selectedMoveSquares : null}
                             />
                             {/* Board controls */}
-                            <div style={{
-                                marginTop: '8px',
-                                display: 'flex',
-                                flexDirection: 'column',
-                                alignItems: 'center',
-                                gap: '6px'
-                            }}>
+                            <div className="board-controls">
                                 <button
                                     onClick={() => setBoardOrientation(o => o === 'white' ? 'black' : 'white')}
-                                    style={{
-                                        padding: '6px 12px',
-                                        background: 'transparent',
-                                        border: '1px solid #555',
-                                        borderRadius: '4px',
-                                        color: '#888',
-                                        cursor: 'pointer',
-                                        fontSize: '1em'
-                                    }}
+                                    className="board-btn"
                                 >
                                     {t(lang, 'board.flip')}
                                 </button>
-                                <div style={{ display: 'flex', gap: '6px', fontSize: '0.85em' }}>
+                                <div className="highlight-toggles">
                                     <button
                                         onClick={() => setShowLastMoveHighlight(!showLastMoveHighlight)}
-                                        style={{
-                                            padding: '6px 12px',
-                                            background: showLastMoveHighlight ? 'rgba(74, 144, 226, 0.2)' : 'transparent',
-                                            border: showLastMoveHighlight ? '1px solid #4a90e2' : '1px solid #555',
-                                            borderRadius: '4px',
-                                            color: showLastMoveHighlight ? '#4a90e2' : '#888',
-                                            cursor: 'pointer',
-                                            fontSize: '1em',
-                                            transition: 'all 0.2s ease'
-                                        }}
+                                        className={`toggle-btn ${showLastMoveHighlight ? 'toggle-btn--active' : ''}`}
                                     >
                                         {t(lang, 'board.showLastMove')}
                                     </button>
                                     <button
                                         onClick={() => setShowSelectedMoveHighlight(!showSelectedMoveHighlight)}
-                                        style={{
-                                            padding: '6px 12px',
-                                            background: showSelectedMoveHighlight ? 'rgba(74, 144, 226, 0.2)' : 'transparent',
-                                            border: showSelectedMoveHighlight ? '1px solid #4a90e2' : '1px solid #555',
-                                            borderRadius: '4px',
-                                            color: showSelectedMoveHighlight ? '#4a90e2' : '#888',
-                                            cursor: 'pointer',
-                                            fontSize: '1em',
-                                            transition: 'all 0.2s ease'
-                                        }}
+                                        className={`toggle-btn ${showSelectedMoveHighlight ? 'toggle-btn--active' : ''}`}
                                     >
                                         {t(lang, 'board.showSelectedMove')}
                                     </button>
@@ -576,7 +472,7 @@ function App() {
                 </div>
 
                 {/* Input Area */}
-                <div style={{ marginTop: '10px', width: '100%', maxWidth: '900px', marginLeft: 'auto', marginRight: 'auto' }}>
+                <div className="input-area">
                     <MoveInput
                         ref={moveInputRef}
                         onMove={addMove}
@@ -587,20 +483,18 @@ function App() {
                 </div>
 
                 {isGameOver && (
-                    <div style={{ textAlign: 'center', color: '#aaa', marginTop: '10px' }}>
+                    <div className="game-over-message">
                         Game Over: {result}
                     </div>
                 )}
             </main>
 
-            <footer style={{ marginTop: 'auto', display: 'flex', flexDirection: 'column', gap: '15px', paddingBottom: '20px' }}>
-                <div style={{ marginBottom: '10px' }}>
+            <footer className="app-footer">
+                <div className="metadata-wrapper">
                     <MetadataEditor
                         headers={headers}
                         onChange={setHeaders}
                         onResetValues={() => {
-                            // Reset all values to "??" but keep keys (including custom ones)
-                            // Result is special - reset to "*" instead of "??"
                             const resetHeaders: { [key: string]: string } = {};
                             for (const key of Object.keys(headers)) {
                                 resetHeaders[key] = key === 'Result' ? '*' : '??';
@@ -610,12 +504,12 @@ function App() {
                         lang={lang}
                     />
                 </div>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', alignItems: 'center' }}>
+                <div className="export-section">
                     {/* Copy Buttons Group */}
-                    <div style={{ display: 'flex', gap: '10px', justifyContent: 'center', flexWrap: 'wrap' }}>
+                    <div className="export-buttons">
                         <button
                             onClick={() => handleExport('copy', false)}
-                            style={{ display: 'flex', alignItems: 'center', gap: '6px' }}
+                            className="export-btn"
                         >
                             <Copy size={16} />
                             {t(lang, 'export.copy')}
@@ -623,11 +517,7 @@ function App() {
                         <button
                             onClick={() => handleExport('copy', true)}
                             disabled={Object.keys(comments).length === 0}
-                            style={{
-                                opacity: Object.keys(comments).length === 0 ? 0.5 : 1,
-                                cursor: Object.keys(comments).length === 0 ? 'not-allowed' : 'pointer',
-                                display: 'flex', alignItems: 'center', gap: '6px'
-                            }}
+                            className="export-btn"
                         >
                             <MessageSquare size={16} />
                             {t(lang, 'export.copyWithComments')}
@@ -635,10 +525,10 @@ function App() {
                     </div>
 
                     {/* Download Buttons Group */}
-                    <div style={{ display: 'flex', gap: '10px', justifyContent: 'center', flexWrap: 'wrap' }}>
+                    <div className="export-buttons">
                         <button
                             onClick={() => handleExport('download', false)}
-                            style={{ display: 'flex', alignItems: 'center', gap: '6px' }}
+                            className="export-btn"
                         >
                             <FileDown size={16} />
                             {t(lang, 'export.downloadMoves')}
@@ -646,11 +536,7 @@ function App() {
                         <button
                             onClick={() => handleExport('download', true)}
                             disabled={Object.keys(comments).length === 0}
-                            style={{
-                                opacity: Object.keys(comments).length === 0 ? 0.5 : 1,
-                                cursor: Object.keys(comments).length === 0 ? 'not-allowed' : 'pointer',
-                                display: 'flex', alignItems: 'center', gap: '6px'
-                            }}
+                            className="export-btn"
                         >
                             <Download size={16} />
                             {t(lang, 'export.download')}
@@ -659,38 +545,18 @@ function App() {
                 </div>
 
                 {/* SAN Note */}
-                <p style={{
-                    textAlign: 'center',
-                    fontSize: '0.75em',
-                    color: '#888',
-                    margin: '0',
-                    fontStyle: 'italic'
-                }}>
+                <p className="san-note">
                     {t(lang, 'export.sanNote')}
                 </p>
 
                 {/* FEN Display */}
-                <div style={{
-                    display: 'flex',
-                    gap: '10px',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    maxWidth: '90%',
-                    margin: '0 auto'
-                }}>
-                    <strong style={{ whiteSpace: 'nowrap' }}>{t(lang, 'export.fen')}:</strong>
+                <div className="fen-display">
+                    <strong className="fen-label">{t(lang, 'export.fen')}:</strong>
                     <input
                         type="text"
                         readOnly
                         value={fen}
                         className="fen-input"
-                        style={{
-                            flex: 1,
-                            minWidth: '200px',
-                            fontSize: '0.85em',
-                            padding: '6px',
-                            textOverflow: 'ellipsis'
-                        }}
                         onClick={(e) => (e.target as HTMLInputElement).select()}
                     />
                     <button
@@ -698,7 +564,7 @@ function App() {
                             await copyToClipboard(fen);
                             showNotification(t(lang, 'export.copied'));
                         }}
-                        style={{ padding: '6px 12px', fontSize: '0.85em' }}
+                        className="fen-copy-btn"
                     >
                         {t(lang, 'export.copyFen')}
                     </button>
@@ -706,7 +572,7 @@ function App() {
 
                 {/* Lichess Analysis Link */}
                 {moveList.length > 0 && (
-                    <div style={{ textAlign: 'center' }}>
+                    <div className="lichess-link-wrapper">
                         <a
                             href={`https://lichess.org/analysis/pgn/${encodeURIComponent(moveList.reduce((acc, move, i) => {
                                 if (i % 2 === 0) acc += `${Math.floor(i / 2) + 1}.`;
@@ -714,44 +580,25 @@ function App() {
                             }, '').trim())}?color=${boardOrientation}`}
                             target="_blank"
                             rel="noopener noreferrer"
-                            style={{
-                                color: '#4a90e2',
-                                textDecoration: 'none',
-                                fontSize: '0.9em'
-                            }}
+                            className="lichess-link"
                         >
                             {t(lang, 'export.lichessAnalysis')} ↗
                         </a>
                     </div>
                 )}
-                <div style={{ textAlign: 'center' }}>
-                    <p style={{ fontSize: '0.8em', color: '#888' }}>
-                        {t(lang, 'footer.credit')} <a href="https://github.com/davideoliveri" target="_blank" rel="noopener noreferrer" style={{ color: '#4a90e2', textDecoration: 'none' }}>Davide Oliveri</a>
+                <div className="credits">
+                    <p>
+                        {t(lang, 'footer.credit')} <a href="https://github.com/davideoliveri" target="_blank" rel="noopener noreferrer">Davide Oliveri</a>
                     </p>
                 </div>
             </footer>
 
             {/* Toast Notification */}
-            {
-                notification && (
-                    <div style={{
-                        position: 'fixed',
-                        bottom: '20px',
-                        left: '50%',
-                        transform: 'translateX(-50%)',
-                        background: 'rgba(74, 144, 226, 0.95)',
-                        color: 'white',
-                        padding: '10px 20px',
-                        borderRadius: '6px',
-                        fontSize: '0.9em',
-                        boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
-                        zIndex: 1000,
-                        animation: 'fadeIn 0.2s ease'
-                    }}>
-                        {notification}
-                    </div>
-                )
-            }
+            {notification && (
+                <div className="toast">
+                    {notification}
+                </div>
+            )}
 
             <HelpModal
                 isOpen={showHelp}

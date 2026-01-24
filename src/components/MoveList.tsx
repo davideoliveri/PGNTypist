@@ -1,5 +1,6 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { type Language, toLocalizedSAN, t } from '../logic/localization';
+import './MoveList.css';
 
 interface MoveListProps {
   moves: string[];
@@ -154,35 +155,15 @@ export const MoveList: React.FC<MoveListProps> = ({
     <>
       <div
         ref={listRef}
-        tabIndex={0} // Make focusable
+        tabIndex={0}
         className="move-list"
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '4px',
-          padding: '10px',
-          border: '1px solid #444',
-          borderRadius: '4px',
-          background: '#1e1e1e',
-          fontFamily: 'monospace',
-          fontSize: '1.3em',
-          outline: 'none' // Handled by focus styles
-        }}
       >
         {rows.map((row, rowIndex) => {
           if (row.type === 'comment') {
             return (
               <div
                 key={`comment-${row.moveIndex}`}
-                style={{
-                  paddingLeft: '40px',
-                  color: '#999',
-                  fontSize: '0.8em',
-                  fontStyle: 'italic',
-                  lineHeight: 1.4,
-                  marginTop: '-2px',
-                  marginBottom: '2px'
-                }}
+                className="comment-row"
               >
                 {row.text}
               </div>
@@ -191,8 +172,8 @@ export const MoveList: React.FC<MoveListProps> = ({
 
           // Move row
           return (
-            <div key={`move-${rowIndex}`} style={{ display: 'flex', gap: '10px' }}>
-              <span style={{ color: '#888', width: '30px', textAlign: 'right' }}>
+            <div key={`move-${rowIndex}`} className="move-row">
+              <span className="move-number">
                 {`${row.moveNumber}.`}
               </span>
 
@@ -208,8 +189,7 @@ export const MoveList: React.FC<MoveListProps> = ({
                   onFocusMoveInput={onFocusMoveInput}
                 />
               ) : (
-                /* ".." placeholder for white column when black-only row */
-                <span style={{ minWidth: '60px', color: '#ccc', padding: '2px 6px' }}>..</span>
+                <span className="move-placeholder">..</span>
               )}
 
               {row.black ? (
@@ -224,68 +204,31 @@ export const MoveList: React.FC<MoveListProps> = ({
                   onFocusMoveInput={onFocusMoveInput}
                 />
               ) : (
-                /* ".." placeholder for black column when white-only row */
-                <span style={{ minWidth: '60px', color: '#ccc', padding: '2px 6px' }}>..</span>
+                <span className="move-placeholder">..</span>
               )}
             </div>
           );
         })}
-        <div style={{ height: '20px' }} /> {/* Spacer at bottom */}
+        <div className="move-list-spacer" />
       </div>
 
       {/* Context Menu */}
       {contextMenu.visible && (
         <div
           className="context-menu"
-          style={{
-            position: 'fixed',
-            left: contextMenu.x,
-            top: contextMenu.y,
-            backgroundColor: '#2a2a2a',
-            border: '1px solid #555',
-            borderRadius: '6px',
-            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.4)',
-            zIndex: 1000,
-            overflow: 'hidden',
-            minWidth: '160px'
-          }}
+          style={{ left: contextMenu.x, top: contextMenu.y }}
           onClick={(e) => e.stopPropagation()}
         >
           <button
             onClick={handleDeleteFromHere}
-            style={{
-              display: 'block',
-              width: '100%',
-              padding: '10px 14px',
-              background: 'transparent',
-              border: 'none',
-              color: '#e74c3c',
-              textAlign: 'left',
-              cursor: 'pointer',
-              fontSize: '0.9em'
-            }}
-            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#3a3a3a'}
-            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+            className="context-menu-btn context-menu-btn--delete"
           >
             🗑️ {t(lang, 'context.deleteFromHere')}
           </button>
           {hasComment && (
             <button
               onClick={handleDeleteComment}
-              style={{
-                display: 'block',
-                width: '100%',
-                padding: '10px 14px',
-                background: 'transparent',
-                border: 'none',
-                borderTop: '1px solid #444',
-                color: '#e9a23b',
-                textAlign: 'left',
-                cursor: 'pointer',
-                fontSize: '0.9em'
-              }}
-              onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#3a3a3a'}
-              onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+              className="context-menu-btn context-menu-btn--comment"
             >
               💬 {t(lang, 'context.deleteComment')}
             </button>
@@ -345,11 +288,11 @@ const MoveItem: React.FC<{
     setIsLongPress(false);
   };
 
-  // Determine background color: highlighted (long-press) > selected (navigation)
-  const getBackgroundColor = () => {
-    if (isHighlighted) return '#8b4513'; // Orange/brown for delete action
-    if (isSelected) return '#3a6ea5';    // Blue for navigation
-    return 'transparent';
+  // Determine CSS class based on state
+  const getClassName = () => {
+    if (isHighlighted) return 'move-item move-item--highlighted';
+    if (isSelected) return 'move-item move-item--selected';
+    return 'move-item';
   };
 
   return (
@@ -360,23 +303,9 @@ const MoveItem: React.FC<{
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
       onTouchCancel={handleTouchEnd}
-      style={{
-        cursor: 'pointer',
-        padding: '2px 6px',
-        borderRadius: '4px',
-        backgroundColor: getBackgroundColor(),
-        color: (isSelected || isHighlighted) ? '#fff' : '#ccc',
-        minWidth: '60px',
-        userSelect: 'none',
-        WebkitUserSelect: 'none',
-        WebkitTouchCallout: 'none',
-        display: 'inline-flex',
-        alignItems: 'center',
-        gap: '4px'
-      }}
+      className={getClassName()}
     >
       {toLocalizedSAN(san, lang)}
     </span>
   );
 };
-

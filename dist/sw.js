@@ -1,6 +1,6 @@
 // Service Worker for Fast PGN Typist
 // Change this version when deploying updates - forces cache refresh
-const CACHE_VERSION = '1769042922302';
+const CACHE_VERSION = '1769287707593';
 const CACHE_NAME = `pgn-typist-v${CACHE_VERSION}`;
 const ASSETS_TO_CACHE = [
   './',

@@ -1,0 +1,93 @@
+/* MetadataEditor Component Styles */
+
+.metadata-editor {
+    border: 1px solid #444;
+    border-radius: 4px;
+    background: #262626;
+}
+
+.metadata-header {
+    padding: 10px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 500;
+}
+
+.metadata-content {
+    padding: 10px;
+    border-top: 1px solid #444;
+}
+
+.metadata-rows {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.metadata-row {
+    display: flex;
+    gap: 4px;
+    flex-wrap: wrap;
+}
+
+.metadata-row--add {
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid #444;
+}
+
+.metadata-separator {
+    width: 100%;
+    border: 1px solid #444;
+}
+
+.metadata-btn-delete {
+    padding: 4px 8px;
+    background: #5e2a2a;
+    color: #ffcccc;
+}
+
+.metadata-btn-add {
+    padding: 4px 8px;
+    background: #2a5e2a;
+    color: #ccffcc;
+}
+
+.metadata-btn-reset {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    margin-bottom: 10px;
+    background: #3a3a3a;
+    border: 1px solid #555;
+    border-radius: 4px;
+    color: #ccc;
+    cursor: pointer;
+    font-size: 0.85em;
+}
+
+.metadata-key {
+    background: #222;
+    border: 1px solid #555;
+    color: #fff;
+    padding: 4px;
+    border-radius: 4px;
+    width: 20%;
+}
+
+.metadata-key--new {
+    background: #333;
+}
+
+.metadata-value {
+    flex: 1;
+    width: 55%;
+    background: #111;
+    border: 1px solid #555;
+    color: #fff;
+    padding: 4px;
+    border-radius: 4px;
+}

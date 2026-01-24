@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { type Language, t } from '../logic/localization';
+import './HelpModal.css';
 
 interface HelpModalProps {
     isOpen: boolean;
@@ -30,18 +31,15 @@ export const HelpModal: React.FC<HelpModalProps> = ({ isOpen, onClose, onStartTu
     // Simple markdown-like rendering for **bold** sections
     const renderInstructions = () => {
         const lines = instructions.split('\n');
+        let isFirst = true;
         return lines.map((line, i) => {
             // Handle section headers (lines starting with **)
             if (line.startsWith('**') && line.endsWith('**')) {
                 const title = line.slice(2, -2);
+                const className = isFirst ? 'help-section-title' : 'help-section-title';
+                isFirst = false;
                 return (
-                    <h3 key={i} style={{
-                        color: '#4a90e2',
-                        marginTop: i === 0 ? 0 : '16px',
-                        marginBottom: '8px',
-                        fontSize: '1em',
-                        fontWeight: 600
-                    }}>
+                    <h3 key={i} className={className}>
                         {title}
                     </h3>
                 );
@@ -52,12 +50,7 @@ export const HelpModal: React.FC<HelpModalProps> = ({ isOpen, onClose, onStartTu
             }
             // Regular content
             return (
-                <p key={i} style={{
-                    margin: '4px 0',
-                    color: '#ccc',
-                    fontSize: '0.9em',
-                    lineHeight: 1.5
-                }}>
+                <p key={i} className="help-paragraph">
                     {line}
                 </p>
             );
@@ -73,54 +66,18 @@ export const HelpModal: React.FC<HelpModalProps> = ({ isOpen, onClose, onStartTu
         <div
             className="help-modal-overlay"
             onClick={onClose}
-            style={{
-                position: 'fixed',
-                top: 0,
-                left: 0,
-                right: 0,
-                bottom: 0,
-                backgroundColor: 'rgba(0, 0, 0, 0.7)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                zIndex: 1000
-            }}
         >
             <div
                 className="help-modal-content"
                 onClick={(e) => e.stopPropagation()}
-                style={{
-                    backgroundColor: '#1e1e1e',
-                    borderRadius: '12px',
-                    padding: '24px',
-                    maxWidth: '500px',
-                    width: '90%',
-                    maxHeight: '80vh',
-                    overflowY: 'auto',
-                    border: '1px solid #444',
-                    boxShadow: '0 8px 32px rgba(0, 0, 0, 0.5)'
-                }}
             >
-                <div style={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                    marginBottom: '16px'
-                }}>
-                    <h2 style={{ margin: 0, color: '#fff', fontSize: '1.3em' }}>
+                <div className="help-modal-header">
+                    <h2 className="help-modal-title">
                         {t(lang, 'help.title')}
                     </h2>
                     <button
                         onClick={onClose}
-                        style={{
-                            background: 'transparent',
-                            border: 'none',
-                            color: '#888',
-                            fontSize: '1.5em',
-                            cursor: 'pointer',
-                            padding: '4px 8px',
-                            lineHeight: 1
-                        }}
+                        className="help-modal-close"
                         aria-label={t(lang, 'help.close')}
                     >
                         ×
@@ -131,36 +88,18 @@ export const HelpModal: React.FC<HelpModalProps> = ({ isOpen, onClose, onStartTu
                     {renderInstructions()}
                 </div>
 
-                <div style={{ display: 'flex', gap: '10px', marginTop: '20px' }}>
+                <div className="help-modal-actions">
                     {onStartTutorial && (
                         <button
                             onClick={handleStartTutorial}
-                            style={{
-                                flex: 1,
-                                padding: '10px',
-                                backgroundColor: 'transparent',
-                                color: '#4a90e2',
-                                border: '1px solid #4a90e2',
-                                borderRadius: '6px',
-                                cursor: 'pointer',
-                                fontSize: '0.95em'
-                            }}
+                            className="help-btn help-btn--secondary"
                         >
                             {t(lang, 'help.restartTutorial')}
                         </button>
                     )}
                     <button
                         onClick={onClose}
-                        style={{
-                            flex: 1,
-                            padding: '10px',
-                            backgroundColor: '#3a6ea5',
-                            color: '#fff',
-                            border: 'none',
-                            borderRadius: '6px',
-                            cursor: 'pointer',
-                            fontSize: '0.95em'
-                        }}
+                        className="help-btn help-btn--primary"
                     >
                         {t(lang, 'help.close')}
                     </button>
@@ -169,4 +108,3 @@ export const HelpModal: React.FC<HelpModalProps> = ({ isOpen, onClose, onStartTu
         </div>
     );
 };
-

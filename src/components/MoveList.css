@@ -1,0 +1,109 @@
+/* MoveList Component Styles */
+
+.move-list {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 10px;
+    border: 1px solid #444;
+    border-radius: 4px;
+    background: #1e1e1e;
+    font-family: monospace;
+    font-size: 1.3em;
+    outline: none;
+    flex: 1;
+    overflow-y: auto;
+    min-height: 0;
+}
+
+.move-row {
+    display: flex;
+    gap: 10px;
+}
+
+.move-number {
+    color: #888;
+    width: 30px;
+    text-align: right;
+}
+
+.move-placeholder {
+    min-width: 60px;
+    color: #ccc;
+    padding: 2px 6px;
+}
+
+.move-item {
+    cursor: pointer;
+    padding: 2px 6px;
+    border-radius: 4px;
+    background-color: transparent;
+    color: #ccc;
+    min-width: 60px;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-touch-callout: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.move-item--selected {
+    background-color: #3a6ea5;
+    color: #fff;
+}
+
+.move-item--highlighted {
+    background-color: #8b4513;
+    color: #fff;
+}
+
+.comment-row {
+    padding-left: 40px;
+    color: #999;
+    font-size: 0.8em;
+    font-style: italic;
+    line-height: 1.4;
+    margin-top: -2px;
+    margin-bottom: 2px;
+}
+
+.move-list-spacer {
+    height: 20px;
+}
+
+/* Context Menu */
+.context-menu {
+    position: fixed;
+    background-color: #2a2a2a;
+    border: 1px solid #555;
+    border-radius: 6px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    z-index: 1000;
+    overflow: hidden;
+    min-width: 160px;
+}
+
+.context-menu-btn {
+    display: block;
+    width: 100%;
+    padding: 10px 14px;
+    background: transparent;
+    border: none;
+    text-align: left;
+    cursor: pointer;
+    font-size: 0.9em;
+}
+
+.context-menu-btn:hover {
+    background-color: #3a3a3a;
+}
+
+.context-menu-btn--delete {
+    color: #e74c3c;
+}
+
+.context-menu-btn--comment {
+    color: #e9a23b;
+    border-top: 1px solid #444;
+}

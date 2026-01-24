@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react';
 import { Chessboard } from 'react-chessboard';
+import './MiniBoard.css';
 
 interface MiniBoardProps {
   fen: string;
@@ -40,12 +41,7 @@ export const MiniBoard: React.FC<MiniBoardProps> = ({
   }, [lastMoveSquares, selectedMoveSquares]);
 
   return (
-    <div style={{
-      width: '100%',
-      maxWidth: '400px', // Slightly larger max width
-      aspectRatio: '1/1',
-      margin: '0 auto'
-    }}>
+    <div className="mini-board-container">
       <Chessboard
         options={{
           position: fen,

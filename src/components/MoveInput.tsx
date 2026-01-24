@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, forwardRef, useImperativeHandle } from 'react';
 import { type Language, toEnglishSAN, t } from '../logic/localization';
+import './MoveInput.css';
 
 interface MoveInputProps {
   onMove: (san: string) => boolean;
@@ -90,40 +91,20 @@ export const MoveInput = forwardRef<MoveInputHandle, MoveInputProps>(({ onMove, 
   };
 
   return (
-    <div style={{ position: 'relative', width: '100%', marginTop: '10px' }}>
+    <div className="move-input-container">
       <input
         ref={inputRef}
         type="text"
         id="move-input"
+        className="move-input"
         value={value}
         onChange={e => setValue(e.target.value)}
         onKeyDown={handleKeyDown}
         placeholder={t(lang, 'app.placeholder')}
-        style={{
-          width: '100%',
-          padding: '12px',
-          fontSize: '1.5em',
-          borderRadius: '8px',
-          border: '1px solid #555',
-          background: '#222',
-          color: '#fff',
-          boxSizing: 'border-box'
-        }}
       />
       {/* Suggestions Popup */}
       {suggestions.length > 0 && (
-        <div style={{
-          position: 'absolute',
-          bottom: '100%',
-          left: 0,
-          right: 0,
-          background: '#333',
-          border: '1px solid #555',
-          borderRadius: '4px',
-          maxHeight: '200px',
-          overflowY: 'auto',
-          zIndex: 10
-        }}>
+        <div className="suggestions-popup">
           {suggestions.map((m, i) => (
             <div
               key={m}
@@ -131,12 +112,7 @@ export const MoveInput = forwardRef<MoveInputHandle, MoveInputProps>(({ onMove, 
                 e.preventDefault(); // Prevent input blur
                 submitMove(m);
               }}
-              style={{
-                padding: '8px 12px',
-                cursor: 'pointer',
-                background: i === highlightIndex ? '#4a4a4a' : 'transparent',
-                color: '#eee'
-              }}
+              className={`suggestion-item ${i === highlightIndex ? 'suggestion-item--highlighted' : ''}`}
             >
               {m}
             </div>
@@ -146,3 +122,4 @@ export const MoveInput = forwardRef<MoveInputHandle, MoveInputProps>(({ onMove, 
     </div>
   );
 });
+
