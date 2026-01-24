@@ -1,11 +1,15 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, forwardRef, useImperativeHandle } from 'react';
 import { type Language, t } from '../logic/localization';
+import { usePersistedState } from '../logic/usePersistedState';
+import { STORAGE_KEYS } from '../logic/storage';
 import './Walkthrough.css';
 
+export interface WalkthroughHandle {
+    start: () => void;
+}
+
 interface WalkthroughProps {
-    isOpen: boolean;
-    onComplete: () => void;
-    onSkip: () => void;
+    onComplete?: () => void;
     lang: Language;
 }
 
@@ -26,11 +30,23 @@ const WALKTHROUGH_STEPS: WalkthroughStep[] = [
     { id: 'done', position: 'center' },
 ];
 
-export const Walkthrough: React.FC<WalkthroughProps> = ({ isOpen, onComplete, onSkip, lang }) => {
+export const Walkthrough = forwardRef<WalkthroughHandle, WalkthroughProps>(({ onComplete, lang }, ref) => {
+    // Own the visibility state with persistence
+    const [hasCompleted, setHasCompleted] = usePersistedState(STORAGE_KEYS.WALKTHROUGH, false);
+    const [isOpen, setIsOpen] = useState(!hasCompleted);
     const [currentStep, setCurrentStep] = useState(0);
     const [highlightRect, setHighlightRect] = useState<DOMRect | null>(null);
 
     const step = WALKTHROUGH_STEPS[currentStep];
+
+    // Expose start method for external triggering (e.g., from HelpModal)
+    useImperativeHandle(ref, () => ({
+        start: () => {
+            setHasCompleted(false);
+            setCurrentStep(0);
+            setIsOpen(true);
+        }
+    }), [setHasCompleted]);
 
     // Reset to step 0 when walkthrough opens
     useEffect(() => {
@@ -71,13 +87,25 @@ export const Walkthrough: React.FC<WalkthroughProps> = ({ isOpen, onComplete, on
         }
     }, [isOpen, step, currentStep]);
 
+    const handleComplete = useCallback(() => {
+        setHasCompleted(true);
+        setIsOpen(false);
+        onComplete?.();
+    }, [setHasCompleted, onComplete]);
+
+    const handleSkip = useCallback(() => {
+        setHasCompleted(true);
+        setIsOpen(false);
+        onComplete?.();
+    }, [setHasCompleted, onComplete]);
+
     const handleNext = useCallback(() => {
         if (currentStep < WALKTHROUGH_STEPS.length - 1) {
             setCurrentStep(prev => prev + 1);
         } else {
-            onComplete();
+            handleComplete();
         }
-    }, [currentStep, onComplete]);
+    }, [currentStep, handleComplete]);
 
     const handlePrev = useCallback(() => {
         if (currentStep > 0) {
@@ -91,7 +119,7 @@ export const Walkthrough: React.FC<WalkthroughProps> = ({ isOpen, onComplete, on
 
         const handleKeyDown = (e: KeyboardEvent) => {
             if (e.key === 'Escape') {
-                onSkip();
+                handleSkip();
             } else if (e.key === 'ArrowRight' || e.key === 'Enter') {
                 handleNext();
             } else if (e.key === 'ArrowLeft') {
@@ -101,7 +129,7 @@ export const Walkthrough: React.FC<WalkthroughProps> = ({ isOpen, onComplete, on
 
         window.addEventListener('keydown', handleKeyDown);
         return () => window.removeEventListener('keydown', handleKeyDown);
-    }, [isOpen, handleNext, handlePrev, onSkip]);
+    }, [isOpen, handleNext, handlePrev, handleSkip]);
 
     if (!isOpen) return null;
 
@@ -118,71 +146,57 @@ export const Walkthrough: React.FC<WalkthroughProps> = ({ isOpen, onComplete, on
         if (!highlightRect || step.position === 'center') {
             return {
                 position: 'fixed',
-                top: '50%',
                 left: '50%',
+                top: '50%',
                 transform: 'translate(-50%, -50%)',
             };
         }
 
-        const spaceAbove = highlightRect.top;
+        // Position below or above target based on available space
         const spaceBelow = window.innerHeight - highlightRect.bottom;
+        const spaceAbove = highlightRect.top;
 
-        const horizontalStyle: React.CSSProperties = isMobile
-            ? { left: '50%', transform: 'translateX(-50%)' }
-            : {
-                left: Math.max(padding, Math.min(
-                    highlightRect.left + (highlightRect.width / 2) - (tooltipWidth / 2),
-                    window.innerWidth - tooltipWidth - padding
-                )),
-                transform: 'none'
-            };
-
-        const elementCenter = highlightRect.top + highlightRect.height / 2;
-        const screenCenter = window.innerHeight / 2;
-        const elementInTopHalf = elementCenter < screenCenter;
-
-        if (elementInTopHalf && spaceBelow > tooltipHeight + padding) {
-            return {
-                position: 'fixed',
-                top: highlightRect.bottom + padding,
-                ...horizontalStyle,
-            };
-        } else if (!elementInTopHalf && spaceAbove > tooltipHeight + padding) {
-            return {
-                position: 'fixed',
-                bottom: window.innerHeight - highlightRect.top + padding,
-                ...horizontalStyle,
-            };
-        } else if (spaceBelow > spaceAbove) {
-            return {
-                position: 'fixed',
-                bottom: padding,
-                left: '50%',
-                transform: 'translateX(-50%)',
-            };
+        let top: number;
+        if (step.position === 'bottom' || (step.position === 'auto' && spaceBelow > tooltipHeight + padding)) {
+            top = highlightRect.bottom + padding;
+        } else if (step.position === 'top' || spaceAbove > tooltipHeight + padding) {
+            top = highlightRect.top - tooltipHeight - padding;
         } else {
-            return {
-                position: 'fixed',
-                top: padding + 50,
-                left: '50%',
-                transform: 'translateX(-50%)',
-            };
+            // Fallback to center
+            top = window.innerHeight / 2 - tooltipHeight / 2;
         }
+
+        // Center horizontally, but keep within bounds
+        let left = highlightRect.left + highlightRect.width / 2 - tooltipWidth / 2;
+        if (isMobile) {
+            left = padding;
+        } else {
+            left = Math.max(padding, Math.min(left, window.innerWidth - tooltipWidth - padding));
+        }
+
+        return {
+            position: 'fixed',
+            left: `${left}px`,
+            top: `${top}px`,
+        };
     };
 
     return (
-        <div className="walkthrough-overlay">
+        <div
+            className="walkthrough-overlay"
+        >
             {/* Always visible close button */}
             <button
-                onClick={onSkip}
                 className="walkthrough-close-btn"
-                aria-label="Close walkthrough"
+                onClick={handleSkip}
             >
-                ×
+                ✕
             </button>
 
-            {/* Dark overlay with cutout for highlighted element */}
-            <svg className="walkthrough-svg">
+            {/* SVG Mask for darkening everything except target */}
+            <svg
+                className="walkthrough-svg"
+            >
                 <defs>
                     <mask id="walkthrough-mask">
                         <rect x="0" y="0" width="100%" height="100%" fill="white" />
@@ -256,7 +270,7 @@ export const Walkthrough: React.FC<WalkthroughProps> = ({ isOpen, onComplete, on
                     )}
                     {isFirstStep && (
                         <button
-                            onClick={onSkip}
+                            onClick={handleSkip}
                             className="walkthrough-btn walkthrough-btn--secondary"
                         >
                             {t(lang, 'walkthrough.skip')}
@@ -266,10 +280,10 @@ export const Walkthrough: React.FC<WalkthroughProps> = ({ isOpen, onComplete, on
                         onClick={handleNext}
                         className="walkthrough-btn walkthrough-btn--primary"
                     >
-                        {isLastStep ? t(lang, 'walkthrough.finish') : t(lang, 'walkthrough.next')}
+                        {isLastStep ? t(lang, 'help.close') : t(lang, 'walkthrough.next')}
                     </button>
                 </div>
             </div>
         </div>
     );
-};
+});

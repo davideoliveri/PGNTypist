@@ -1,6 +1,7 @@
-import { useState, useCallback, useMemo } from 'react';
+import { useState, useCallback, useMemo, useEffect } from 'react';
 import { Chess, Move } from 'chess.js';
 import { toLocalizedSAN, type Language } from './localization';
+import { STORAGE_KEYS } from './storage';
 
 export interface GameState {
   fen: string;
@@ -19,11 +20,33 @@ interface HistoryState {
   comments: Record<number, string>;
 }
 
-export function useChessGame(initialMoves: string[] = [], initialComments: Record<number, string> = {}) {
+interface UseChessGameOptions {
+  initialMoves?: string[];
+  initialComments?: Record<number, string>;
+  persist?: boolean;
+}
+
+export function useChessGame(options: UseChessGameOptions = {}) {
+  const { initialMoves = [], initialComments = {}, persist = false } = options;
+
   // The source of truth is the array of moves (English SAN).
   const [moves, setMoves] = useState<string[]>(initialMoves);
   // Comments keyed by move index (half-ply)
   const [comments, setComments] = useState<Record<number, string>>(initialComments);
+
+  // Persist moves to localStorage
+  useEffect(() => {
+    if (persist) {
+      localStorage.setItem(STORAGE_KEYS.MOVES, JSON.stringify(moves));
+    }
+  }, [moves, persist]);
+
+  // Persist comments to localStorage
+  useEffect(() => {
+    if (persist) {
+      localStorage.setItem(STORAGE_KEYS.COMMENTS, JSON.stringify(comments));
+    }
+  }, [comments, persist]);
   // History for Undo/Redo (of the moves + comments together)
   const [historyStack, setHistoryStack] = useState<HistoryState[]>([]);
   const [redoStack, setRedoStack] = useState<HistoryState[]>([]);

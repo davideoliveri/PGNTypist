@@ -6,7 +6,7 @@ import { MoveList } from './components/MoveList';
 import { MoveInput, type MoveInputHandle } from './components/MoveInput';
 import { MetadataEditor } from './components/MetadataEditor';
 import { HelpModal } from './components/HelpModal';
-import { Walkthrough } from './components/Walkthrough';
+import { Walkthrough, type WalkthroughHandle } from './components/Walkthrough';
 import { AppHeader } from './components/AppHeader';
 import { BoardPanel } from './components/BoardPanel';
 import { MoveListControls } from './components/MoveListControls';
@@ -18,22 +18,12 @@ function App() {
     const [lang, setLang] = useState<Language>(getInitialLanguage);
     const [headers, setHeaders] = useState<{ [key: string]: string }>(getInitialHeaders);
     const [showHelp, setShowHelp] = useState(false);
-    const [showWalkthrough, setShowWalkthrough] = useState(() => {
-        return !localStorage.getItem(STORAGE_KEYS.WALKTHROUGH);
-    });
     const [notification, setNotification] = useState<string | null>(null);
     const [boardOrientation, setBoardOrientation] = useState<'white' | 'black'>('white');
     const [isMobile, setIsMobile] = useState(window.innerWidth <= 640);
-    const [showLastMoveHighlight, setShowLastMoveHighlight] = useState(() => {
-        const stored = localStorage.getItem(STORAGE_KEYS.SHOW_LAST_MOVE);
-        return stored === null ? true : stored === 'true';
-    });
-    const [showSelectedMoveHighlight, setShowSelectedMoveHighlight] = useState(() => {
-        const stored = localStorage.getItem(STORAGE_KEYS.SHOW_SELECTED_MOVE);
-        return stored === null ? true : stored === 'true';
-    });
 
     const moveInputRef = useRef<MoveInputHandle>(null);
+    const walkthroughRef = useRef<WalkthroughHandle>(null);
 
     const {
         moveList,
@@ -57,36 +47,21 @@ function App() {
         result,
         isGameOver,
         fen
-    } = useChessGame(getInitialMoves(), getInitialComments());
-
-    // Persist moves to localStorage
-    useEffect(() => {
-        localStorage.setItem(STORAGE_KEYS.MOVES, JSON.stringify(moveList));
-    }, [moveList]);
+    } = useChessGame({
+        initialMoves: getInitialMoves(),
+        initialComments: getInitialComments(),
+        persist: true
+    });
 
     // Persist headers to localStorage
     useEffect(() => {
         localStorage.setItem(STORAGE_KEYS.HEADERS, JSON.stringify(headers));
     }, [headers]);
 
-    // Persist comments to localStorage
-    useEffect(() => {
-        localStorage.setItem(STORAGE_KEYS.COMMENTS, JSON.stringify(comments));
-    }, [comments]);
-
     // Persist language to localStorage
     useEffect(() => {
         localStorage.setItem(STORAGE_KEYS.LANGUAGE, lang);
     }, [lang]);
-
-    // Persist highlight settings
-    useEffect(() => {
-        localStorage.setItem(STORAGE_KEYS.SHOW_LAST_MOVE, String(showLastMoveHighlight));
-    }, [showLastMoveHighlight]);
-
-    useEffect(() => {
-        localStorage.setItem(STORAGE_KEYS.SHOW_SELECTED_MOVE, String(showSelectedMoveHighlight));
-    }, [showSelectedMoveHighlight]);
 
     // Update Result in headers if game over
     useEffect(() => {
@@ -215,11 +190,7 @@ function App() {
                             orientation={boardOrientation}
                             lastMoveSquares={lastMoveSquares}
                             selectedMoveSquares={selectedMoveSquares}
-                            showLastMoveHighlight={showLastMoveHighlight}
-                            showSelectedMoveHighlight={showSelectedMoveHighlight}
                             onFlip={() => setBoardOrientation(o => o === 'white' ? 'black' : 'white')}
-                            onToggleLastMove={() => setShowLastMoveHighlight(!showLastMoveHighlight)}
-                            onToggleSelectedMove={() => setShowSelectedMoveHighlight(!showSelectedMoveHighlight)}
                             lang={lang}
                         />
                     )}
@@ -277,24 +248,14 @@ function App() {
                 isOpen={showHelp}
                 onClose={() => setShowHelp(false)}
                 onStartTutorial={() => {
-                    localStorage.removeItem(STORAGE_KEYS.WALKTHROUGH);
-                    setShowWalkthrough(true);
+                    walkthroughRef.current?.start();
                 }}
                 lang={lang}
             />
 
             <Walkthrough
-                isOpen={showWalkthrough}
-                onComplete={() => {
-                    localStorage.setItem(STORAGE_KEYS.WALKTHROUGH, 'true');
-                    setShowWalkthrough(false);
-                    moveInputRef.current?.focus();
-                }}
-                onSkip={() => {
-                    localStorage.setItem(STORAGE_KEYS.WALKTHROUGH, 'true');
-                    setShowWalkthrough(false);
-                    moveInputRef.current?.focus();
-                }}
+                ref={walkthroughRef}
+                onComplete={() => moveInputRef.current?.focus()}
                 lang={lang}
             />
         </div>

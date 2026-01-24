@@ -1,5 +1,7 @@
 import React from 'react';
 import { type Language, t } from '../logic/localization';
+import { usePersistedBoolean } from '../logic/usePersistedState';
+import { STORAGE_KEYS } from '../logic/storage';
 import { MiniBoard } from './MiniBoard';
 
 interface BoardPanelProps {
@@ -7,11 +9,7 @@ interface BoardPanelProps {
     orientation: 'white' | 'black';
     lastMoveSquares: { from: string; to: string } | null;
     selectedMoveSquares: { from: string; to: string } | null;
-    showLastMoveHighlight: boolean;
-    showSelectedMoveHighlight: boolean;
     onFlip: () => void;
-    onToggleLastMove: () => void;
-    onToggleSelectedMove: () => void;
     lang: Language;
 }
 
@@ -20,13 +18,13 @@ export const BoardPanel: React.FC<BoardPanelProps> = ({
     orientation,
     lastMoveSquares,
     selectedMoveSquares,
-    showLastMoveHighlight,
-    showSelectedMoveHighlight,
     onFlip,
-    onToggleLastMove,
-    onToggleSelectedMove,
     lang
 }) => {
+    // Own highlight settings with persistence
+    const [showLastMoveHighlight, toggleLastMove] = usePersistedBoolean(STORAGE_KEYS.SHOW_LAST_MOVE, true);
+    const [showSelectedMoveHighlight, toggleSelectedMove] = usePersistedBoolean(STORAGE_KEYS.SHOW_SELECTED_MOVE, true);
+
     return (
         <div className="board-column">
             <MiniBoard
@@ -44,13 +42,13 @@ export const BoardPanel: React.FC<BoardPanelProps> = ({
                 </button>
                 <div className="highlight-toggles">
                     <button
-                        onClick={onToggleLastMove}
+                        onClick={toggleLastMove}
                         className={`toggle-btn ${showLastMoveHighlight ? 'toggle-btn--active' : ''}`}
                     >
                         {t(lang, 'board.showLastMove')}
                     </button>
                     <button
-                        onClick={onToggleSelectedMove}
+                        onClick={toggleSelectedMove}
                         className={`toggle-btn ${showSelectedMoveHighlight ? 'toggle-btn--active' : ''}`}
                     >
                         {t(lang, 'board.showSelectedMove')}
