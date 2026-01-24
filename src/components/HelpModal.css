@@ -76,7 +76,7 @@
     margin-top: 20px;
 }
 
-.help-btn {
+.help-modal-btn {
     flex: 1;
     padding: 10px;
     border-radius: 6px;
@@ -84,13 +84,13 @@
     font-size: 0.95em;
 }
 
-.help-btn--secondary {
+.help-modal-btn--secondary {
     background-color: transparent;
     color: #4a90e2;
     border: 1px solid #4a90e2;
 }
 
-.help-btn--primary {
+.help-modal-btn--primary {
     background-color: #3a6ea5;
     color: #fff;
     border: none;

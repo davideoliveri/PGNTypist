@@ -92,14 +92,14 @@ export const HelpModal: React.FC<HelpModalProps> = ({ isOpen, onClose, onStartTu
                     {onStartTutorial && (
                         <button
                             onClick={handleStartTutorial}
-                            className="help-btn help-btn--secondary"
+                            className="help-modal-btn help-modal-btn--secondary"
                         >
                             {t(lang, 'help.restartTutorial')}
                         </button>
                     )}
                     <button
                         onClick={onClose}
-                        className="help-btn help-btn--primary"
+                        className="help-modal-btn help-modal-btn--primary"
                     >
                         {t(lang, 'help.close')}
                     </button>
