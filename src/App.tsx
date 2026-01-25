@@ -19,7 +19,6 @@ function App() {
     const [headers, setHeaders] = useState<{ [key: string]: string }>(getInitialHeaders);
     const [showHelp, setShowHelp] = useState(false);
     const [notification, setNotification] = useState<string | null>(null);
-    const [boardOrientation, setBoardOrientation] = useState<'white' | 'black'>('white');
     const [isMobile, setIsMobile] = useState(window.innerWidth <= 640);
 
     const moveInputRef = useRef<MoveInputHandle>(null);
@@ -187,10 +186,8 @@ function App() {
                     {!isMobile && (
                         <BoardPanel
                             fen={fen}
-                            orientation={boardOrientation}
                             lastMoveSquares={lastMoveSquares}
                             selectedMoveSquares={selectedMoveSquares}
-                            onFlip={() => setBoardOrientation(o => o === 'white' ? 'black' : 'white')}
                             lang={lang}
                         />
                     )}
@@ -233,7 +230,6 @@ function App() {
                 />
                 <AppFooter
                     moveList={moveList}
-                    boardOrientation={boardOrientation}
                     lang={lang}
                 />
             </footer>

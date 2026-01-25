@@ -9,6 +9,7 @@ export const STORAGE_KEYS = {
     SHOW_LAST_MOVE: 'pgn-typist-show-last-move',
     SHOW_SELECTED_MOVE: 'pgn-typist-show-selected-move',
     LANGUAGE: 'pgn-typist-lang',
+    BOARD_ORIENTATION: 'pgn-typist-board-orientation',
 } as const;
 
 export const DEFAULT_HEADERS: { [key: string]: string } = {

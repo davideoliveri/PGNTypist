@@ -1,29 +1,28 @@
 import React from 'react';
 import { type Language, t } from '../logic/localization';
-import { usePersistedBoolean } from '../logic/usePersistedState';
+import { usePersistedBoolean, usePersistedState } from '../logic/usePersistedState';
 import { STORAGE_KEYS } from '../logic/storage';
 import { MiniBoard } from './MiniBoard';
 
 interface BoardPanelProps {
     fen: string;
-    orientation: 'white' | 'black';
     lastMoveSquares: { from: string; to: string } | null;
     selectedMoveSquares: { from: string; to: string } | null;
-    onFlip: () => void;
     lang: Language;
 }
 
 export const BoardPanel: React.FC<BoardPanelProps> = ({
     fen,
-    orientation,
     lastMoveSquares,
     selectedMoveSquares,
-    onFlip,
     lang
 }) => {
-    // Own highlight settings with persistence
+    // Own all board settings with persistence
+    const [orientation, setOrientation] = usePersistedState<'white' | 'black'>(STORAGE_KEYS.BOARD_ORIENTATION, 'white');
     const [showLastMoveHighlight, toggleLastMove] = usePersistedBoolean(STORAGE_KEYS.SHOW_LAST_MOVE, true);
     const [showSelectedMoveHighlight, toggleSelectedMove] = usePersistedBoolean(STORAGE_KEYS.SHOW_SELECTED_MOVE, true);
+
+    const handleFlip = () => setOrientation(o => o === 'white' ? 'black' : 'white');
 
     return (
         <div className="board-column">
@@ -35,7 +34,7 @@ export const BoardPanel: React.FC<BoardPanelProps> = ({
             />
             <div className="board-controls">
                 <button
-                    onClick={onFlip}
+                    onClick={handleFlip}
                     className="board-btn"
                 >
                     {t(lang, 'board.flip')}

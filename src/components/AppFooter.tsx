@@ -1,17 +1,20 @@
 import React from 'react';
 import { type Language, t } from '../logic/localization';
+import { usePersistedState } from '../logic/usePersistedState';
+import { STORAGE_KEYS } from '../logic/storage';
 
 interface AppFooterProps {
     moveList: string[];
-    boardOrientation: 'white' | 'black';
     lang: Language;
 }
 
 export const AppFooter: React.FC<AppFooterProps> = ({
     moveList,
-    boardOrientation,
     lang
 }) => {
+    // Read board orientation from persisted state (same source as BoardPanel)
+    const [boardOrientation] = usePersistedState<'white' | 'black'>(STORAGE_KEYS.BOARD_ORIENTATION, 'white');
+
     const lichessUrl = moveList.length > 0
         ? `https://lichess.org/analysis/pgn/${encodeURIComponent(
             moveList.reduce((acc, move, i) => {

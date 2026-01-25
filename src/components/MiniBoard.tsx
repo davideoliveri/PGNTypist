@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useEffect } from 'react';
 import { Chessboard } from 'react-chessboard';
 import './MiniBoard.css';
 
@@ -40,8 +40,54 @@ export const MiniBoard: React.FC<MiniBoardProps> = ({
     return styles;
   }, [lastMoveSquares, selectedMoveSquares]);
 
+  // Robustly prevent any element within the board from being focusable via Tab.
+  // We use a MutationObserver because the library dynamically re-adds tabindex="0"
+  // to pieces as they move or are highlighted.
+  useEffect(() => {
+    const boardElement = document.getElementById("MiniBoard");
+    if (!boardElement) return;
+
+    const stripFocus = (root: HTMLElement | DocumentFragment) => {
+      const focusables = root.querySelectorAll('[tabindex="0"]');
+      focusables.forEach(el => el.setAttribute('tabindex', '-1'));
+    };
+
+    // Initial strip
+    stripFocus(boardElement);
+
+    // Watch for ANY changes to the board's DOM structure
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        if (mutation.type === 'childList') {
+          mutation.addedNodes.forEach((node) => {
+            if (node instanceof HTMLElement) {
+              if (node.getAttribute('tabindex') === '0') {
+                node.setAttribute('tabindex', '-1');
+              }
+              stripFocus(node);
+            }
+          });
+        } else if (mutation.type === 'attributes' && mutation.attributeName === 'tabindex') {
+          const target = mutation.target as HTMLElement;
+          if (target.getAttribute('tabindex') === '0') {
+            target.setAttribute('tabindex', '-1');
+          }
+        }
+      });
+    });
+
+    observer.observe(boardElement, {
+      childList: true,
+      subtree: true,
+      attributes: true,
+      attributeFilter: ['tabindex']
+    });
+
+    return () => observer.disconnect();
+  }, []); // Re-run only on mount; observer handles dynamic changes
+
   return (
-    <div className="mini-board-container">
+    <div className="mini-board-container" id="MiniBoard">
       <Chessboard
         options={{
           position: fen,
