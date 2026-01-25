@@ -1,0 +1,59 @@
+/* ExportSection Component Styles */
+.export-section {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+}
+
+.export-buttons {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.export-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.export-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.san-note {
+    text-align: center;
+    font-size: 0.75em;
+    color: #888;
+    margin: 0;
+    font-style: italic;
+}
+
+.fen-display {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    justify-content: center;
+    max-width: 90%;
+    margin: 0 auto;
+}
+
+.fen-label {
+    white-space: nowrap;
+}
+
+.fen-input {
+    flex: 1;
+    min-width: 200px;
+    font-size: 0.85em;
+    padding: 6px;
+    text-overflow: ellipsis;
+}
+
+.fen-copy-btn {
+    padding: 6px 12px;
+    font-size: 0.85em;
+}

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, forwardRef, useImperativeHandle } from 'react';
-import { type Language, toEnglishSAN, t } from '../logic/localization';
+import { type Language, toEnglishSAN, t } from '../../../../services/localization';
 import './MoveInput.css';
 
 interface MoveInputProps {

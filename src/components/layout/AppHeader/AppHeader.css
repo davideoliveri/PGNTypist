@@ -1,0 +1,62 @@
+/* AppHeader Component Styles */
+.app-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.title-logo {
+    font-size: 2.2em;
+    display: flex;
+    align-items: center;
+    margin: 0;
+}
+
+.title-logo img {
+    width: 30px;
+    height: 30px;
+    margin-right: 10px;
+}
+
+.header-controls {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.help-btn {
+    background: transparent;
+    border: 1px solid #555;
+    color: #888;
+    width: 28px;
+    height: 28px;
+    min-width: 28px;
+    min-height: 28px;
+    padding: 0;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 0.9em;
+    font-weight: 500;
+    line-height: 1;
+}
+
+.language-select-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    align-items: center;
+}
+
+.language-select {
+    padding: 4px;
+    border-radius: 4px;
+    background: #333;
+    color: #fff;
+    border: 1px solid #555;
+}
+
+@media (max-width: 640px) {
+    .title-logo {
+        font-size: 1.5em;
+    }
+}

@@ -1,6 +1,11 @@
 /* MoveList Component Styles */
 
 .move-list {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
     display: flex;
     flex-direction: column;
     gap: 4px;
@@ -11,14 +16,14 @@
     font-family: monospace;
     font-size: 1.3em;
     outline: none;
-    flex: 1;
     overflow-y: auto;
-    min-height: 0;
+    overflow-x: hidden;
+    scrollbar-width: thin;
 }
 
 .move-row {
     display: flex;
-    gap: 10px;
+    gap: 8px;
 }
 
 .move-number {
@@ -28,7 +33,7 @@
 }
 
 .move-placeholder {
-    min-width: 60px;
+    min-width: 50px;
     color: #ccc;
     padding: 2px 6px;
 }
@@ -39,7 +44,7 @@
     border-radius: 4px;
     background-color: transparent;
     color: #ccc;
-    min-width: 60px;
+    min-width: 50px;
     user-select: none;
     -webkit-user-select: none;
     -webkit-touch-callout: none;

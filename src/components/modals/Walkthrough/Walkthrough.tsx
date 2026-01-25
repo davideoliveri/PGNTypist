@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback, forwardRef, useImperativeHandle } from 'react';
-import { type Language, t } from '../logic/localization';
-import { usePersistedState } from '../logic/usePersistedState';
-import { STORAGE_KEYS } from '../logic/storage';
+import { type Language, t } from '../../../services/localization';
+import { usePersistedState } from '../../../hooks/usePersistedState';
+import { STORAGE_KEYS } from '../../../services/storage';
 import './Walkthrough.css';
 
 export interface WalkthroughHandle {

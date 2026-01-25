@@ -1,224 +1,28 @@
-/* App Container */
+/* Global Layout Styles */
+:root {
+    color-scheme: dark;
+}
+
+body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    background-color: #1a1a1a;
+    color: #e0e0e0;
+}
+
 .app-container {
     max-width: 900px;
     margin: 0 auto;
     padding: 20px;
     display: flex;
     flex-direction: column;
-    height: 100vh;
+    height: 100%;
     box-sizing: border-box;
     gap: 20px;
 }
 
-/* Header */
-.app-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.title-logo {
-    font-size: 2.2em;
-    display: flex;
-    align-items: center;
-    margin: 0;
-}
-
-.title-logo img {
-    width: 30px;
-    height: 30px;
-    margin-right: 10px;
-}
-
-.header-controls {
-    display: flex;
-    gap: 12px;
-    align-items: center;
-}
-
-.help-btn {
-    background: transparent;
-    border: 1px solid #555;
-    color: #888;
-    width: 28px;
-    height: 28px;
-    min-width: 28px;
-    min-height: 28px;
-    padding: 0;
-    border-radius: 50%;
-    cursor: pointer;
-    font-size: 0.9em;
-    font-weight: 500;
-    line-height: 1;
-}
-
-.language-select-wrapper {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    align-items: center;
-}
-
-.language-select {
-    padding: 4px;
-    border-radius: 4px;
-    background: #333;
-    color: #fff;
-    border: 1px solid #555;
-}
-
-/* Main Content */
-.app-main {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    margin-top: 10px;
-}
-
-/* Desktop: Side-by-side grid with bigger board */
-.content-grid {
-    display: grid;
-    grid-template-columns: 1fr 400px;
-    gap: 12px;
-    align-items: start;
-}
-
-.moves-column {
-    display: flex;
-    flex-direction: column;
-    height: 484px;
-}
-
-.board-column {
-    display: flex;
-    flex-direction: column;
-}
-
-/* Delete Buttons */
-.delete-buttons {
-    display: flex;
-    gap: 8px;
-    margin-top: 8px;
-    justify-content: center;
-    flex-wrap: wrap;
-}
-
-.delete-btn {
-    padding: 6px 12px;
-    background: transparent;
-    border: 1px solid #555;
-    border-radius: 4px;
-    color: #888;
-    cursor: pointer;
-    font-size: 1em;
-}
-
-.delete-btn:disabled {
-    color: #444;
-    cursor: default;
-    opacity: 0.5;
-}
-
-.delete-btn--danger {
-    border-color: #733;
-    color: #a66;
-}
-
-.delete-btn--danger:disabled {
-    color: #533;
-}
-
-.delete-btn--info {
-    border-color: #557;
-    color: #88a;
-}
-
-.delete-btn--info:disabled {
-    color: #445;
-}
-
-/* Comment Input */
-.comment-input-wrapper {
-    margin-top: 8px;
-}
-
-.comment-input {
-    width: 100%;
-    padding: 8px 12px;
-    border-radius: 4px;
-    border: 1px solid #555;
-    background: #2a2a2a;
-    color: #ccc;
-    font-size: 0.9em;
-    box-sizing: border-box;
-}
-
-.comment-input:disabled {
-    background: #1a1a1a;
-    color: #555;
-}
-
-/* Board Controls */
-.board-controls {
-    margin-top: 8px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 6px;
-}
-
-.board-btn {
-    padding: 6px 12px;
-    background: transparent;
-    border: 1px solid #555;
-    border-radius: 4px;
-    color: #888;
-    cursor: pointer;
-    font-size: 1em;
-}
-
-.highlight-toggles {
-    display: flex;
-    gap: 6px;
-    font-size: 0.85em;
-}
-
-.toggle-btn {
-    padding: 6px 12px;
-    background: transparent;
-    border: 1px solid #555;
-    border-radius: 4px;
-    color: #888;
-    cursor: pointer;
-    font-size: 1em;
-    transition: all 0.2s ease;
-}
-
-.toggle-btn--active {
-    background: rgba(74, 144, 226, 0.2);
-    border-color: #4a90e2;
-    color: #4a90e2;
-}
-
-/* Input Area */
-.input-area {
-    margin-top: 10px;
-    width: 100%;
-    max-width: 900px;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-/* Game Over */
-.game-over-message {
-    text-align: center;
-    color: #aaa;
-    margin-top: 10px;
-}
-
-/* Footer */
-.app-footer {
+/* Common Layout Wrapper in App.tsx */
+.app-footer-layout {
     margin-top: auto;
     display: flex;
     flex-direction: column;
@@ -226,98 +30,11 @@
     padding-bottom: 20px;
 }
 
-.metadata-wrapper {
+.metadata-row-wrapper {
     margin-bottom: 10px;
 }
 
-.export-section {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    align-items: center;
-}
-
-.export-buttons {
-    display: flex;
-    gap: 10px;
-    justify-content: center;
-    flex-wrap: wrap;
-}
-
-.export-btn {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-}
-
-.export-btn:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-}
-
-/* SAN Note */
-.san-note {
-    text-align: center;
-    font-size: 0.75em;
-    color: #888;
-    margin: 0;
-    font-style: italic;
-}
-
-/* FEN Display */
-.fen-display {
-    display: flex;
-    gap: 10px;
-    align-items: center;
-    justify-content: center;
-    max-width: 90%;
-    margin: 0 auto;
-}
-
-.fen-label {
-    white-space: nowrap;
-}
-
-.fen-input {
-    flex: 1;
-    min-width: 200px;
-    font-size: 0.85em;
-    padding: 6px;
-    text-overflow: ellipsis;
-}
-
-.fen-copy-btn {
-    padding: 6px 12px;
-    font-size: 0.85em;
-}
-
-/* Lichess Link */
-.lichess-link-wrapper {
-    text-align: center;
-}
-
-.lichess-link {
-    color: #4a90e2;
-    text-decoration: none;
-    font-size: 0.9em;
-}
-
-/* Credits */
-.credits {
-    text-align: center;
-}
-
-.credits p {
-    font-size: 0.8em;
-    color: #888;
-}
-
-.credits a {
-    color: #4a90e2;
-    text-decoration: none;
-}
-
-/* Toast Notification */
+/* Global Elements */
 .toast {
     position: fixed;
     bottom: 20px;
@@ -333,84 +50,23 @@
     animation: fadeIn 0.2s ease;
 }
 
-/* Update Banner */
-.update-banner {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    background: linear-gradient(135deg, #4a90e2, #357abd);
-    color: white;
-    padding: 10px 20px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 12px;
-    z-index: 1001;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-    animation: slideDown 0.3s ease;
-}
-
-@keyframes slideDown {
+@keyframes fadeIn {
     from {
-        transform: translateY(-100%);
+        opacity: 0;
+        transform: translate(-50%, 10px);
     }
 
     to {
-        transform: translateY(0);
+        opacity: 1;
+        transform: translate(-50%, 0);
     }
 }
 
-.update-banner span {
-    font-size: 0.9em;
-    font-weight: 500;
-}
-
-.update-banner button {
-    background: rgba(255, 255, 255, 0.2);
-    border: 1px solid rgba(255, 255, 255, 0.4);
-    color: white;
-    padding: 6px 16px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 0.85em;
-    font-weight: 500;
-    transition: background 0.2s, border-color 0.2s;
-}
-
-.update-banner button:hover {
-    background: rgba(255, 255, 255, 0.3);
-    border-color: rgba(255, 255, 255, 0.6);
-}
-
-/* Mobile Responsive */
-@media (max-width: 640px) {
-    .content-grid {
-        grid-template-columns: 1fr;
-        flex: 1;
-    }
-
-    .moves-column {
-        flex: 1;
-        min-height: 200px;
-        max-height: 50vh;
-    }
-
-    .metadata-row {
-        flex-wrap: nowrap;
-    }
-
-    .metadata-key {
-        flex: 0 0 60px !important;
-        width: 60px !important;
-    }
-
-    .metadata-value {
-        flex: 1 1 auto !important;
-        min-width: 100px !important;
-    }
-
-    .title-logo {
-        font-size: 1.5em;
-    }
+/* Layout utilities */
+.input-area {
+    margin-top: 10px;
+    width: 100%;
+    max-width: 900px;
+    margin-left: auto;
+    margin-right: auto;
 }

@@ -1,5 +1,6 @@
 import React from 'react';
-import { type Language, t } from '../logic/localization';
+import { type Language, t } from '../../../../services/localization';
+import './MoveListControls.css';
 
 interface MoveListControlsProps {
     moveListLength: number;

@@ -1,7 +1,7 @@
 import { useState, useCallback, useMemo, useEffect } from 'react';
 import { Chess, Move } from 'chess.js';
-import { toLocalizedSAN, type Language } from './localization';
-import { STORAGE_KEYS } from './storage';
+import { toLocalizedSAN, type Language } from '../services/localization';
+import { STORAGE_KEYS } from '../services/storage';
 
 export interface GameState {
   fen: string;

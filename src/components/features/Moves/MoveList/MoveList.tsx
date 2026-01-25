@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState } from 'react';
-import { type Language, toLocalizedSAN, t } from '../logic/localization';
+import { type Language, toLocalizedSAN, t } from '../../../../services/localization';
 import './MoveList.css';
 
 interface MoveListProps {

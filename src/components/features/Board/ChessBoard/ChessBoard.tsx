@@ -1,8 +1,8 @@
 import React, { useMemo, useEffect } from 'react';
 import { Chessboard } from 'react-chessboard';
-import './MiniBoard.css';
+import './ChessBoard.css';
 
-interface MiniBoardProps {
+interface ChessBoardProps {
   fen: string;
   orientation?: 'white' | 'black';
   lastMoveSquares?: { from: string; to: string } | null;
@@ -15,7 +15,7 @@ const HIGHLIGHT_STYLE = { backgroundColor: 'rgba(155, 199, 0, 0.41)' };
 // Blue outline for selected move (matches move list selection color #3a6ea5)
 const SELECTED_OUTLINE_STYLE = { boxShadow: 'inset 0 0 0 3px rgba(40, 43, 240, 0.85)' };
 
-export const MiniBoard: React.FC<MiniBoardProps> = ({
+export const ChessBoard: React.FC<ChessBoardProps> = ({
   fen,
   orientation = 'white',
   lastMoveSquares,
@@ -44,7 +44,7 @@ export const MiniBoard: React.FC<MiniBoardProps> = ({
   // We use a MutationObserver because the library dynamically re-adds tabindex="0"
   // to pieces as they move or are highlighted.
   useEffect(() => {
-    const boardElement = document.getElementById("MiniBoard");
+    const boardElement = document.getElementById("ChessBoard");
     if (!boardElement) return;
 
     const stripFocus = (root: HTMLElement | DocumentFragment) => {
@@ -87,11 +87,11 @@ export const MiniBoard: React.FC<MiniBoardProps> = ({
   }, []); // Re-run only on mount; observer handles dynamic changes
 
   return (
-    <div className="mini-board-container" id="MiniBoard">
+    <div className="chess-board-container" id="ChessBoard">
       <Chessboard
         options={{
           position: fen,
-          id: "MiniBoard",
+          id: "ChessBoard",
           boardOrientation: orientation,
           allowDragging: false,
           darkSquareStyle: { backgroundColor: '#b58863' },

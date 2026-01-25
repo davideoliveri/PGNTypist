@@ -1,8 +1,9 @@
 import React from 'react';
 import { Copy, Download, MessageSquare, FileDown } from 'lucide-react';
-import { type Language, t } from '../logic/localization';
-import { copyToClipboard } from '../logic/clipboard';
-import { buildPgnString, downloadPgn } from '../logic/pgnExport';
+import { type Language, t } from '../../../../services/localization';
+import { copyToClipboard } from '../../../../utils/clipboard';
+import { buildPgnString, downloadPgn } from '../../../../utils/pgnExport';
+import './ExportSection.css';
 
 interface ExportPanelProps {
     headers: { [key: string]: string };
@@ -14,7 +15,7 @@ interface ExportPanelProps {
     lang: Language;
 }
 
-export const ExportPanel: React.FC<ExportPanelProps> = ({
+export const ExportSection: React.FC<ExportPanelProps> = ({
     headers,
     moveList,
     comments,

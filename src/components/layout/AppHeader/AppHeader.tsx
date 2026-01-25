@@ -1,5 +1,6 @@
 import React from 'react';
-import { type Language, SUPPORTED_LANGUAGES, t } from '../logic/localization';
+import { type Language, SUPPORTED_LANGUAGES, t } from '../../../services/localization';
+import './AppHeader.css';
 
 interface AppHeaderProps {
     lang: Language;

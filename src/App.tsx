@@ -1,17 +1,24 @@
 import { useState, useEffect, useRef } from 'react';
-import { useChessGame } from './logic/chessAdapter';
-import { type Language } from './logic/localization';
-import { STORAGE_KEYS, getInitialMoves, getInitialHeaders, getInitialComments, getInitialLanguage } from './logic/storage';
-import { MoveList } from './components/MoveList';
-import { MoveInput, type MoveInputHandle } from './components/MoveInput';
-import { MetadataEditor } from './components/MetadataEditor';
-import { HelpModal } from './components/HelpModal';
-import { Walkthrough, type WalkthroughHandle } from './components/Walkthrough';
-import { AppHeader } from './components/AppHeader';
-import { BoardPanel } from './components/BoardPanel';
-import { MoveListControls } from './components/MoveListControls';
-import { ExportPanel } from './components/ExportPanel';
-import { AppFooter } from './components/AppFooter';
+import { useChessGame } from './hooks/useChessGame';
+import { type Language } from './services/localization';
+import { STORAGE_KEYS, getInitialMoves, getInitialHeaders, getInitialComments, getInitialLanguage } from './services/storage';
+
+// Layout
+import { AppHeader } from './components/layout/AppHeader/AppHeader';
+import { AppMain } from './components/layout/AppMain/AppMain';
+import { AppFooter } from './components/layout/AppFooter/AppFooter';
+
+// Features
+import { MoveInput, type MoveInputHandle } from './components/features/Moves/MoveInput/MoveInput';
+import { ExportSection } from './components/features/Export/ExportSection/ExportSection';
+import { MetadataSection } from './components/features/Export/MetadataSection/MetadataSection';
+
+// Modals
+import { HelpModal } from './components/modals/HelpModal/HelpModal';
+import { Walkthrough, type WalkthroughHandle } from './components/modals/Walkthrough/Walkthrough';
+
+import { useBoardSettings } from './hooks/useBoardSettings';
+
 import './App.css';
 
 function App() {
@@ -20,6 +27,8 @@ function App() {
     const [showHelp, setShowHelp] = useState(false);
     const [notification, setNotification] = useState<string | null>(null);
     const [isMobile, setIsMobile] = useState(window.innerWidth <= 640);
+
+    const { settings: boardSettings, handlers: boardHandlers } = useBoardSettings();
 
     const moveInputRef = useRef<MoveInputHandle>(null);
     const walkthroughRef = useRef<WalkthroughHandle>(null);
@@ -82,6 +91,23 @@ function App() {
         setTimeout(() => setNotification(null), 2000);
     };
 
+    // Navigation Helper
+    const navigate = (direction: -1 | 1) => {
+        setCursor((prev) => {
+            if (direction === -1) {
+                if (prev === null) return moveList.length > 0 ? moveList.length - 1 : null;
+                return Math.max(0, prev - 1);
+            } else {
+                if (prev === null) return null;
+                if (prev >= moveList.length - 1) {
+                    setTimeout(() => moveInputRef.current?.focus(), 0);
+                    return null;
+                }
+                return prev + 1;
+            }
+        });
+    };
+
     // Global Keyboard Shortcuts
     useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
@@ -120,23 +146,6 @@ function App() {
         return () => window.removeEventListener('keydown', handleKeyDown);
     }, [undo, redo, canUndo, canRedo, moveList.length]);
 
-    // Navigation Helper
-    const navigate = (direction: -1 | 1) => {
-        setCursor((prev) => {
-            if (direction === -1) {
-                if (prev === null) return moveList.length > 0 ? moveList.length - 1 : null;
-                return Math.max(0, prev - 1);
-            } else {
-                if (prev === null) return null;
-                if (prev >= moveList.length - 1) {
-                    setTimeout(() => moveInputRef.current?.focus(), 0);
-                    return null;
-                }
-                return prev + 1;
-            }
-        });
-    };
-
     // Comment handlers
     const handleCommentChange = (value: string) => {
         if (selectedIndex !== null) {
@@ -157,56 +166,44 @@ function App() {
                 onShowHelp={() => setShowHelp(true)}
             />
 
-            <main className="app-main">
-                <div className="content-grid">
-                    <div className="moves-column">
-                        <MoveList
-                            moves={moveList}
-                            comments={comments}
-                            selectedIndex={selectedIndex}
-                            onSelect={setCursor}
-                            onDeleteFrom={truncateFromIndex}
-                            onDeleteComment={deleteComment}
-                            onFocusMoveInput={() => moveInputRef.current?.focus()}
-                            lang={lang}
-                        />
-                        <MoveListControls
-                            moveListLength={moveList.length}
-                            commentsCount={Object.keys(comments).length}
-                            selectedIndex={selectedIndex}
-                            commentValue={selectedIndex !== null ? (comments[selectedIndex] || '') : ''}
-                            onDeleteLast={deleteLast}
-                            onClearAll={clearAll}
-                            onClearComments={clearAllComments}
-                            onCommentChange={handleCommentChange}
-                            onCommentSubmit={handleCommentSubmit}
-                            lang={lang}
-                        />
-                    </div>
-                    {!isMobile && (
-                        <BoardPanel
-                            fen={fen}
-                            lastMoveSquares={lastMoveSquares}
-                            selectedMoveSquares={selectedMoveSquares}
-                            lang={lang}
-                        />
-                    )}
-                </div>
+            <AppMain
+                moveList={moveList}
+                comments={comments}
+                selectedIndex={selectedIndex}
+                commentValue={selectedIndex !== null ? (comments[selectedIndex] || '') : ''}
+                onSelect={setCursor}
+                onDeleteLast={deleteLast}
+                onClearAll={clearAll}
+                onClearComments={clearAllComments}
+                onDeleteFrom={truncateFromIndex}
+                onDeleteComment={deleteComment}
+                onCommentChange={handleCommentChange}
+                onCommentSubmit={handleCommentSubmit}
+                fen={fen}
+                lastMoveSquares={lastMoveSquares}
+                selectedMoveSquares={selectedMoveSquares}
+                isMobile={isMobile}
+                isGameOver={isGameOver}
+                result={result}
+                lang={lang}
+                onFocusMoveInput={() => moveInputRef.current?.focus()}
+                boardSettings={boardSettings}
+                boardHandlers={boardHandlers}
+            />
 
-                <div className="input-area">
-                    <MoveInput
-                        ref={moveInputRef}
-                        onMove={addMove}
-                        legalMoves={legalMoves(lang)}
-                        lang={lang}
-                        onNavigate={navigate}
-                    />
-                </div>
-            </main>
+            <div className="input-area">
+                <MoveInput
+                    ref={moveInputRef}
+                    onMove={addMove}
+                    legalMoves={legalMoves(lang)}
+                    lang={lang}
+                    onNavigate={navigate}
+                />
+            </div>
 
-            <footer className="app-footer">
-                <div className="metadata-wrapper">
-                    <MetadataEditor
+            <footer className="app-footer-layout">
+                <div className="metadata-row-wrapper">
+                    <MetadataSection
                         headers={headers}
                         onChange={setHeaders}
                         onResetValues={() => {
@@ -219,7 +216,7 @@ function App() {
                         lang={lang}
                     />
                 </div>
-                <ExportPanel
+                <ExportSection
                     headers={headers}
                     moveList={moveList}
                     comments={comments}
@@ -231,6 +228,7 @@ function App() {
                 <AppFooter
                     moveList={moveList}
                     lang={lang}
+                    boardOrientation={boardSettings.orientation}
                 />
             </footer>
 

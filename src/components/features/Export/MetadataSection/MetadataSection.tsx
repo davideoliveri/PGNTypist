@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { ChevronDown, ChevronRight, Plus, X, RotateCcw } from 'lucide-react';
-import { type Language, t } from '../logic/localization';
-import './MetadataEditor.css';
+import { type Language, t } from '../../../../services/localization';
+import './MetadataSection.css';
 
 interface MetadataEditorProps {
   headers: { [key: string]: string };
@@ -54,7 +54,7 @@ const MetadataRow: React.FC<{
   );
 };
 
-export const MetadataEditor: React.FC<MetadataEditorProps> = ({ headers, onChange, onResetValues, lang }) => {
+export const MetadataSection: React.FC<MetadataEditorProps> = ({ headers, onChange, onResetValues, lang }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [newKey, setNewKey] = useState('');
   const [newValue, setNewValue] = useState('');

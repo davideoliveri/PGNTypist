@@ -1,0 +1,73 @@
+/* AppMain Component Styles - Implementing Two-Row Grid */
+.app-main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin-top: 10px;
+}
+
+.app-main-grid {
+    display: grid;
+    grid-template-columns: minmax(170px, 1fr) minmax(200px, 400px);
+    grid-template-rows: auto min-content;
+    gap: 12px;
+    align-items: stretch;
+}
+
+/* Row 1: The Stage */
+.stage-moves {
+    grid-area: 1 / 1;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    position: relative;
+}
+
+.stage-board {
+    grid-area: 1 / 2;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Row 2: The Controls */
+.controls-moves {
+    grid-area: 2 / 1;
+}
+
+.controls-board {
+    grid-area: 2 / 2;
+}
+
+/* Game Over Message */
+.game-over-message {
+    text-align: center;
+    color: #aaa;
+    margin-top: 10px;
+}
+
+/* Mobile Responsive */
+@media (max-width: 640px) {
+    .app-main-grid {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto auto auto;
+    }
+
+    .stage-moves {
+        grid-area: 1 / 1;
+        height: 300px;
+        /* Smaller on mobile */
+    }
+
+    .stage-board {
+        grid-area: 2 / 1;
+    }
+
+    .controls-moves {
+        grid-area: 3 / 1;
+    }
+
+    .controls-board {
+        grid-area: 4 / 1;
+    }
+}

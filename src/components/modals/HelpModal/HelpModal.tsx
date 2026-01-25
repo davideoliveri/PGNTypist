@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { type Language, t } from '../logic/localization';
+import { type Language, t } from '../../../services/localization';
 import './HelpModal.css';
 
 interface HelpModalProps {
