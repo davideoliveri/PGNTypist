@@ -2,6 +2,7 @@ import React from 'react';
 import { type Language, t } from '../../../services/localization';
 import { MoveList } from '../../features/Moves/MoveList/MoveList';
 import { MoveListControls } from '../../features/Moves/MoveListControls/MoveListControls';
+import { HistoryControls } from '../../features/Moves/HistoryControls/HistoryControls';
 import { ChessBoard } from '../../features/Board/ChessBoard/ChessBoard';
 import { BoardControls } from '../../features/Board/BoardControls/BoardControls';
 import { type BoardSettings, type BoardSettingsHandlers } from '../../../hooks/useBoardSettings';
@@ -20,6 +21,13 @@ interface AppMainProps {
     onDeleteComment: (index: number) => void;
     onCommentChange: (value: string) => void;
     onCommentSubmit: () => void;
+    onUndo: () => void;
+    onRedo: () => void;
+    onNavigate: (dir: -1 | 1) => void;
+    onGoToStart: () => void;
+    onGoToEnd: () => void;
+    canUndo: boolean;
+    canRedo: boolean;
     fen: string;
     lastMoveSquares: { from: string; to: string } | null;
     selectedMoveSquares: { from: string; to: string } | null;
@@ -45,6 +53,13 @@ export const AppMain: React.FC<AppMainProps> = ({
     onDeleteComment,
     onCommentChange,
     onCommentSubmit,
+    onUndo,
+    onRedo,
+    onNavigate,
+    onGoToStart,
+    onGoToEnd,
+    canUndo,
+    canRedo,
     fen,
     lastMoveSquares,
     selectedMoveSquares,
@@ -86,6 +101,16 @@ export const AppMain: React.FC<AppMainProps> = ({
 
                 {/* Controls Row */}
                 <div className="controls-moves">
+                    <HistoryControls
+                        canUndo={canUndo}
+                        canRedo={canRedo}
+                        onUndo={onUndo}
+                        onRedo={onRedo}
+                        onNavigate={onNavigate}
+                        onGoToStart={onGoToStart}
+                        onGoToEnd={onGoToEnd}
+                        lang={lang}
+                    />
                     <MoveListControls
                         moveListLength={moveList.length}
                         commentsCount={Object.keys(comments).length}

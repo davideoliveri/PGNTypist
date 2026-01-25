@@ -179,6 +179,13 @@ function App() {
                 onDeleteComment={deleteComment}
                 onCommentChange={handleCommentChange}
                 onCommentSubmit={handleCommentSubmit}
+                onUndo={undo}
+                onRedo={redo}
+                onNavigate={navigate}
+                onGoToStart={() => setCursor(0)}
+                onGoToEnd={() => setCursor(null)}
+                canUndo={canUndo}
+                canRedo={canRedo}
                 fen={fen}
                 lastMoveSquares={lastMoveSquares}
                 selectedMoveSquares={selectedMoveSquares}
